@@ -1,8 +1,8 @@
-package com.open_doc.web_server.service.article;
+package com.open_doc.web_server.modules.article.domain;
 
 import java.util.UUID;
 
-import com.open_doc.web_server.repository.article.ArticleEntity;
+import com.open_doc.web_server.modules.article.repository.ArticleEntity;
 
 public record ArticleResponseDTO(UUID id, String title, String content, String createdAt) {
     public ArticleResponseDTO(ArticleEntity article) {

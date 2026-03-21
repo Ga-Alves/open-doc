@@ -1,4 +1,4 @@
-package com.open_doc.web_server.domain;
+package com.open_doc.web_server.modules.user.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

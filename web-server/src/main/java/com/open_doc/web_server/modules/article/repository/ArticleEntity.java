@@ -1,4 +1,4 @@
-package com.open_doc.web_server.repository.article;
+package com.open_doc.web_server.modules.article.repository;
 
 import java.util.UUID;
 
