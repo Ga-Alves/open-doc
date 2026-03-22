@@ -1,19 +1,13 @@
-import { useQuery } from "@tanstack/react-query";
-import { getArticlesOptions } from "./api-client/@tanstack/react-query.gen";
+import { Route, Routes } from "react-router";
+import Home from "./pages/private/home/home";
+import NotFound from "./pages/public/not-found/not-found";
 
 function App() {
-  const { data } = useQuery(getArticlesOptions());
-
   return (
-    <div>
-      {data?.map((article) => (
-        <div key={article.id}>
-          <h1>{article.title}</h1>
-          <caption>{article.createdAt}</caption>
-          <p>{article.content}</p>
-        </div>
-      ))}
-    </div>
+    <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="*" element={<NotFound />} />
+    </Routes>
   );
 }
 
