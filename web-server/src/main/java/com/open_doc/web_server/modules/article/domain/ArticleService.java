@@ -5,6 +5,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.open_doc.web_server.modules.article.domain.dtos.ArticleResponseDTO;
+import com.open_doc.web_server.modules.article.domain.dtos.CreateArticleRequestDTO;
+import com.open_doc.web_server.modules.article.repository.ArticleEntity;
 import com.open_doc.web_server.modules.article.repository.ArticleRepository;
 
 @Service
@@ -22,4 +25,15 @@ public class ArticleService {
                         article.getCreatedAt().toString()))
                 .toList();
     }
+
+    public ArticleResponseDTO createArticle(CreateArticleRequestDTO payload) {
+
+        ArticleEntity newArticle = ArticleEntity.builder().title(payload.title()).content(payload.content())
+                .build();
+
+        ArticleEntity savedArticle = articleRepository.save(newArticle);
+
+        return new ArticleResponseDTO(savedArticle);
+    }
+
 }

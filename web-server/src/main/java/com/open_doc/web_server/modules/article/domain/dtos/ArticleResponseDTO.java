@@ -1,4 +1,4 @@
-package com.open_doc.web_server.modules.article.domain;
+package com.open_doc.web_server.modules.article.domain.dtos;
 
 import java.util.UUID;
 
