@@ -2,7 +2,7 @@
 
 import type { Client, Options as Options2, TDataShape } from './client';
 import { client } from './client.gen';
-import type { GetArticlesData, GetArticlesResponses } from './types.gen';
+import type { CreateArticleData, CreateArticleResponses, GetArticlesData, GetArticlesResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean> = Options2<TData, ThrowOnError> & {
     /**
@@ -19,3 +19,12 @@ export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends 
 };
 
 export const getArticles = <ThrowOnError extends boolean = false>(options?: Options<GetArticlesData, ThrowOnError>) => (options?.client ?? client).get<GetArticlesResponses, unknown, ThrowOnError>({ url: '/api/v1/articles', ...options });
+
+export const createArticle = <ThrowOnError extends boolean = false>(options: Options<CreateArticleData, ThrowOnError>) => (options.client ?? client).post<CreateArticleResponses, unknown, ThrowOnError>({
+    url: '/api/v1/articles',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});

@@ -4,6 +4,11 @@ export type ClientOptions = {
     baseUrl: 'http://localhost:8080' | (string & {});
 };
 
+export type CreateArticleRequestDto = {
+    title?: string;
+    content?: string;
+};
+
 export type ArticleResponseDto = {
     id?: string;
     title?: string;
@@ -26,3 +31,19 @@ export type GetArticlesResponses = {
 };
 
 export type GetArticlesResponse = GetArticlesResponses[keyof GetArticlesResponses];
+
+export type CreateArticleData = {
+    body: CreateArticleRequestDto;
+    path?: never;
+    query?: never;
+    url: '/api/v1/articles';
+};
+
+export type CreateArticleResponses = {
+    /**
+     * OK
+     */
+    200: ArticleResponseDto;
+};
+
+export type CreateArticleResponse = CreateArticleResponses[keyof CreateArticleResponses];
