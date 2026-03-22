@@ -13,3 +13,7 @@ source .env
 ```bash
 ./mvnw spring-boot:run
 ```
+
+# TODO's
+
+[ ] - JWT response in sign-in sign-up
