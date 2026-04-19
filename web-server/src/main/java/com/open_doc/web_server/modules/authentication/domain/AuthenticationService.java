@@ -1,72 +1,58 @@
 package com.open_doc.web_server.modules.authentication.domain;
 
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.open_doc.web_server.modules.authentication.domain.dtos.SignInRequestDTO;
 import com.open_doc.web_server.modules.authentication.domain.dtos.SignUpRequestDTO;
-import com.open_doc.web_server.modules.authentication.exceptions.UserDoesNotExistOrPasswordMissMatchException;
-import com.open_doc.web_server.modules.authentication.repository.AuthenticationEntity;
-import com.open_doc.web_server.modules.authentication.repository.AuthenticationRepository;
-import com.open_doc.web_server.modules.user.exceptions.UserAlreadyExistsException;
-import com.open_doc.web_server.modules.user.repository.UsersEntity;
-import com.open_doc.web_server.modules.user.repository.UsersRepository;
+import com.open_doc.web_server.modules.authentication.domain.enums.UserRole;
+import com.open_doc.web_server.modules.authentication.repository.UserAuthEntity;
+import com.open_doc.web_server.modules.authentication.repository.UserAuthRepository;
 
 @Service
 public class AuthenticationService {
 
     @Autowired
-    AuthenticationRepository authRepository;
+    private UserAuthRepository userAuthRepository;
 
     @Autowired
-    UsersRepository usersRepository;
+    private AuthenticationManager authenticationManager;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    private TokenService tokenService;
 
-    public String signUp(SignUpRequestDTO request) {
-        Boolean doesUserExists = usersRepository.existsByEmail(request.email());
+    public ResponseEntity<String> signUp(SignUpRequestDTO body) {
+        UserDetails userAuth = userAuthRepository.findByEmail(body.email());
 
-        if (doesUserExists) {
-            throw new UserAlreadyExistsException("User with email " + request.email() + " already exists");
-        }
+        if (userAuth != null)
+            return ResponseEntity.badRequest().build();
 
-        UsersEntity user = UsersEntity.builder()
-                .name(request.name())
-                .email(request.email())
-                .build();
+        String encryptedPassword = new BCryptPasswordEncoder().encode(body.password());
 
-        UsersEntity savedUser = usersRepository.save(user);
+        UserAuthEntity newUser = new UserAuthEntity(body.name(), body.email(), encryptedPassword, UserRole.USER);
 
-        AuthenticationEntity auth = AuthenticationEntity.builder()
-                .email(request.email())
-                .encryptPassword(passwordEncoder.encode(request.password()))
-                .user(savedUser)
-                .build();
+        userAuthRepository.save(newUser);
 
-        authRepository.save(auth);
+        String authToken = tokenService.generateToken(newUser);
 
-        return "Your JWT here!";
+        return ResponseEntity.ok().body(authToken);
     }
 
-    public String signIn(SignInRequestDTO request) {
-        Optional<UsersEntity> userOptional = usersRepository.findByEmail(request.email());
+    public ResponseEntity<String> signIn(SignInRequestDTO body) {
 
-        if (userOptional.isEmpty()) {
-            throw new UserDoesNotExistOrPasswordMissMatchException();
-        }
+        var password = new UsernamePasswordAuthenticationToken(body.email(), body.password());
 
-        UsersEntity user = userOptional.get();
-        AuthenticationEntity auth = authRepository.findByUserId(user.id);
+        var auth = this.authenticationManager.authenticate(password);
 
-        if (!passwordEncoder.matches(request.password(), auth.encryptPassword)) {
-            throw new UserDoesNotExistOrPasswordMissMatchException();
-        }
+        UserAuthEntity user = (UserAuthEntity) auth.getPrincipal();
 
-        return "Your JWT here!";
+        String jwt = tokenService.generateToken(user);
+
+        return ResponseEntity.ok(jwt);
     }
-
 }

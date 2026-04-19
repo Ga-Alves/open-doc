@@ -1,6 +1,7 @@
 package com.open_doc.web_server.modules.authentication.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,12 +21,11 @@ public class AuthenticationController {
     AuthenticationService authenticationService;
 
     @PostMapping("/sign-up")
-    public String signUp(@RequestBody @Valid SignUpRequestDTO body) {
+    public ResponseEntity<String> signUp(@RequestBody @Valid SignUpRequestDTO body) {
         return authenticationService.signUp(body);
     }
-
     @PostMapping("/sign-in")
-    public String signIn(@RequestBody @Valid SignInRequestDTO body) {
+    public ResponseEntity<String> signIn(@RequestBody @Valid SignInRequestDTO body) {
         return authenticationService.signIn(body);
     }
 
