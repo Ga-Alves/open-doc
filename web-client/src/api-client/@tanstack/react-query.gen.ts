@@ -3,8 +3,36 @@
 import { type DefaultError, queryOptions, type UseMutationOptions } from '@tanstack/react-query';
 
 import { client } from '../client.gen';
-import { createArticle, getArticles, type Options } from '../sdk.gen';
-import type { CreateArticleData, CreateArticleResponse, GetArticlesData, GetArticlesResponse } from '../types.gen';
+import { createArticle, getArticles, type Options, signIn, signUp } from '../sdk.gen';
+import type { CreateArticleData, CreateArticleResponse, GetArticlesData, GetArticlesResponse, SignInData, SignInResponse, SignUpData, SignUpResponse } from '../types.gen';
+
+export const signUpMutation = (options?: Partial<Options<SignUpData>>): UseMutationOptions<SignUpResponse, DefaultError, Options<SignUpData>> => {
+    const mutationOptions: UseMutationOptions<SignUpResponse, DefaultError, Options<SignUpData>> = {
+        mutationFn: async (fnOptions) => {
+            const { data } = await signUp({
+                ...options,
+                ...fnOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
+
+export const signInMutation = (options?: Partial<Options<SignInData>>): UseMutationOptions<SignInResponse, DefaultError, Options<SignInData>> => {
+    const mutationOptions: UseMutationOptions<SignInResponse, DefaultError, Options<SignInData>> = {
+        mutationFn: async (fnOptions) => {
+            const { data } = await signIn({
+                ...options,
+                ...fnOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
 
 export type QueryKey<TOptions extends Options> = [
     Pick<TOptions, 'baseUrl' | 'body' | 'headers' | 'path' | 'query'> & {

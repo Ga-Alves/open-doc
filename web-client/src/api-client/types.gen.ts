@@ -4,6 +4,17 @@ export type ClientOptions = {
     baseUrl: 'http://localhost:8080' | (string & {});
 };
 
+export type SignUpRequestDto = {
+    name: string;
+    password: string;
+    email: string;
+};
+
+export type SignInRequestDto = {
+    password: string;
+    email: string;
+};
+
 export type CreateArticleRequestDto = {
     title?: string;
     content?: string;
@@ -15,6 +26,38 @@ export type ArticleResponseDto = {
     content?: string;
     createdAt?: string;
 };
+
+export type SignUpData = {
+    body: SignUpRequestDto;
+    path?: never;
+    query?: never;
+    url: '/api/v1/auth/sign-up';
+};
+
+export type SignUpResponses = {
+    /**
+     * OK
+     */
+    200: string;
+};
+
+export type SignUpResponse = SignUpResponses[keyof SignUpResponses];
+
+export type SignInData = {
+    body: SignInRequestDto;
+    path?: never;
+    query?: never;
+    url: '/api/v1/auth/sign-in';
+};
+
+export type SignInResponses = {
+    /**
+     * OK
+     */
+    200: string;
+};
+
+export type SignInResponse = SignInResponses[keyof SignInResponses];
 
 export type GetArticlesData = {
     body?: never;

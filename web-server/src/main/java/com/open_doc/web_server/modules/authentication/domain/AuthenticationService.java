@@ -43,7 +43,7 @@ public class AuthenticationService {
         return ResponseEntity.ok().body(authToken);
     }
 
-    public ResponseEntity<String> signIn(SignInRequestDTO body) {
+    public String signIn(SignInRequestDTO body) {
 
         var password = new UsernamePasswordAuthenticationToken(body.email(), body.password());
 
@@ -53,6 +53,6 @@ public class AuthenticationService {
 
         String jwt = tokenService.generateToken(user);
 
-        return ResponseEntity.ok(jwt);
+        return jwt;
     }
 }

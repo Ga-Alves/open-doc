@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router";
 
 function Home() {
-  const { data } = useQuery(getArticlesOptions());
+  const { data } = useQuery(getArticlesOptions({ credentials: "include" }));
 
   const navigate = useNavigate();
 
@@ -14,7 +14,10 @@ function Home() {
         <h1>Header</h1>{" "}
         <button onClick={() => navigate(OPEN_DOCS_ROUTE.CREATE_ARTICLE)}>
           Create Article
-        </button>
+        </button>{" "}
+        <button onClick={() => navigate(OPEN_DOCS_ROUTE.SIGN_IN)}>
+          Sign In
+        </button>{" "}
       </header>
       <div>
         {data?.map((article) => (
@@ -30,4 +33,3 @@ function Home() {
 }
 
 export default Home;
-9;

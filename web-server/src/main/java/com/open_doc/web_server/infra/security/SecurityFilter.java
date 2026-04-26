@@ -12,9 +12,12 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.open_doc.web_server.modules.authentication.domain.TokenService;
 import com.open_doc.web_server.modules.authentication.domain.enums.UserRole;
+import com.open_doc.web_server.modules.authentication.repository.UserAuthEntity;
+import com.open_doc.web_server.modules.shared.Constants;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -44,21 +47,24 @@ public class SecurityFilter extends OncePerRequestFilter {
   }
 
   private String recoverToken(HttpServletRequest request) {
-    var authHeader = request.getHeader("Authorization");
-    if (authHeader == null) {
-      return null;
+
+    Cookie[] cookies = request.getCookies();
+
+    if(cookies == null) return null;
+
+    for (int i = 0; i < cookies.length; i++) {
+      String cookieName = cookies[i].getName();
+      if (cookieName.equals(Constants.TOKEN)) {
+        return cookies[i].getValue();
+      }
     }
 
-    return authHeader.replace("Bearer ", "");
+    return null;
+
   }
 
   private List<SimpleGrantedAuthority> getAuthoritiesBasedOnRole(UserRole role) {
-    if (role == UserRole.ADMIN) {
-      return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER"));
-    } else if (role == UserRole.USER) {
-      return List.of(new SimpleGrantedAuthority("ROLE_USER"));
-    }
-    return List.of();
+    return UserAuthEntity.getAuthoritiesByUserRole(role);
   }
 
 }

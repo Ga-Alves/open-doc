@@ -58,10 +58,14 @@ public class UserAuthEntity implements UserDetails{
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
-    if(this.role == UserRole.ADMIN){
+    return getAuthoritiesByUserRole(role);
+  }
+
+  public static List<SimpleGrantedAuthority> getAuthoritiesByUserRole(UserRole role){
+    if(role == UserRole.ADMIN){
       return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER"));
     }
-    else if(this.role == UserRole.USER){
+    else if(role == UserRole.USER){
       return List.of(new SimpleGrantedAuthority("ROLE_USER"));
     }
     return List.of();

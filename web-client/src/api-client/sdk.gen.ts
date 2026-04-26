@@ -2,7 +2,7 @@
 
 import type { Client, Options as Options2, TDataShape } from './client';
 import { client } from './client.gen';
-import type { CreateArticleData, CreateArticleResponses, GetArticlesData, GetArticlesResponses } from './types.gen';
+import type { CreateArticleData, CreateArticleResponses, GetArticlesData, GetArticlesResponses, SignInData, SignInResponses, SignUpData, SignUpResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean> = Options2<TData, ThrowOnError> & {
     /**
@@ -18,9 +18,34 @@ export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends 
     meta?: Record<string, unknown>;
 };
 
-export const getArticles = <ThrowOnError extends boolean = false>(options?: Options<GetArticlesData, ThrowOnError>) => (options?.client ?? client).get<GetArticlesResponses, unknown, ThrowOnError>({ url: '/api/v1/articles', ...options });
+export const signUp = <ThrowOnError extends boolean = false>(options: Options<SignUpData, ThrowOnError>) => (options.client ?? client).post<SignUpResponses, unknown, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/api/v1/auth/sign-up',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+export const signIn = <ThrowOnError extends boolean = false>(options: Options<SignInData, ThrowOnError>) => (options.client ?? client).post<SignInResponses, unknown, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/api/v1/auth/sign-in',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+export const getArticles = <ThrowOnError extends boolean = false>(options?: Options<GetArticlesData, ThrowOnError>) => (options?.client ?? client).get<GetArticlesResponses, unknown, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/api/v1/articles',
+    ...options
+});
 
 export const createArticle = <ThrowOnError extends boolean = false>(options: Options<CreateArticleData, ThrowOnError>) => (options.client ?? client).post<CreateArticleResponses, unknown, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
     url: '/api/v1/articles',
     ...options,
     headers: {
