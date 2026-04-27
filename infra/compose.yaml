@@ -1,0 +1,44 @@
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER_NAME}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    networks:
+      - open-doc-network
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  web-server:
+    build: ../web-server/
+    environment:
+      - API_PORT=${API_PORT}
+      - DB_HOST=postgres
+      - DB_PORT=${DB_PORT}
+      - DB_NAME=${DB_NAME}
+      - DB_USER_NAME=${DB_USER_NAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - JWT_SECRET=${JWT_SECRET}
+    networks:
+      - open-doc-network
+    depends_on:
+      - postgres
+
+
+  web-client:
+    build:
+      context: ../web-client/
+      args:
+        VITE_API_BASE_URL: ${VITE_API_BASE_URL}
+    ports:
+      - "80:80"
+    networks:
+      - open-doc-network
+
+volumes:
+  postgres_data:
+
+networks:
+  open-doc-network:
+    driver: bridge
