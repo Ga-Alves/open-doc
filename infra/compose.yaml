@@ -25,6 +25,23 @@ services:
     depends_on:
       - postgres
 
+  certbot:
+    build: ./ssl-certificate/
+    environment:
+      - APP_DOMAIN=${APP_DOMAIN}
+      - SSL_EMAIL=${SSL_EMAIL}
+    volumes:
+      - ssl-cert:/etc/letsencrypt
+      - webroot:/var/www/certbot
+    network_mode: host
+
+  certbot-renew:
+    build: ./ssl-certificate-renew/
+    volumes:
+      - ssl-cert:/etc/letsencrypt
+      - webroot:/var/www/certbot
+    depends_on:
+      - web-server
 
   web-client:
     build:
@@ -33,11 +50,20 @@ services:
         VITE_API_BASE_URL: ${VITE_API_BASE_URL}
     ports:
       - "80:80"
+      - "443:443"
     networks:
       - open-doc-network
+    volumes:
+      - ssl-cert:/etc/letsencrypt:ro
+      - webroot:/var/www/certbot:ro
+    depends_on:
+      - certbot
+
 
 volumes:
   postgres_data:
+  ssl-cert:
+  webroot:
 
 networks:
   open-doc-network:

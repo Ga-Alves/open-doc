@@ -11,4 +11,7 @@ export default defineConfig({
       "@api-client": path.resolve(__dirname, "./src/api-client"),
     },
   },
+  server: {
+    allowedHosts: ['open-doc.cloud']
+  }
 });
