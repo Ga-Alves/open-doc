@@ -29,7 +29,7 @@ export default function SignIn() {
           value={formState.password}
           onChange={(e) => changePassword(e.target.value)}
         />
-        <button onClick={submitForm}>Sign In</button>
+        <button onClick={submitForm}>Sign in</button>
       </div>
     </div>
   );
