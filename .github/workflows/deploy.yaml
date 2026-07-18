@@ -18,5 +18,5 @@ jobs:
           ssh -i ~/.ssh/deploy_key ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} \
             'cd ~/open-doc && \
              git pull git@github.com:Ga-Alves/open-doc.git && \
-             cd infra \
+             cd infra && \
              docker compose up -d --build'
