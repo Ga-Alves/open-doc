@@ -1,20 +1,15 @@
-import { useNavigate } from "react-router";
+import Button from "@/shared/components/button/Button";
+import Layout from "@/shared/layout/layout";
 import useSignIn from "./hooks/use-sign-in";
-import { OPEN_DOCS_ROUTE } from "@/utils/constants";
 
 export default function SignIn() {
   const { changeEmail, changePassword, formState, submitForm } = useSignIn();
-  const navigate = useNavigate();
 
   return (
-    <div>
-      <h1>Sign-in</h1>
+    <Layout>
+      <h1>Sign-in Page</h1>
 
-      <button onClick={() => navigate(OPEN_DOCS_ROUTE.HOME)}>
-        Go Back Home
-      </button>
-
-      <div>
+      <div className="flex flex-col gap-2">
         <input
           type="email"
           name="user-email"
@@ -29,8 +24,10 @@ export default function SignIn() {
           value={formState.password}
           onChange={(e) => changePassword(e.target.value)}
         />
-        <button onClick={submitForm}>Sign in</button>
+        <Button variant="primary" onClick={submitForm}>
+          Sign in
+        </Button>
       </div>
-    </div>
+    </Layout>
   );
 }
