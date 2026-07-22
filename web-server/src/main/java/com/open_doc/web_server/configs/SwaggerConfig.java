@@ -12,7 +12,6 @@ public class SwaggerConfig {
 
   @Bean
   public OpenAPI customOpenAPI() {
-    // Define o esquema de segurança Bearer JWT
     SecurityScheme securityScheme = new SecurityScheme()
         .type(SecurityScheme.Type.HTTP)
         .scheme("bearer")
@@ -20,7 +19,6 @@ public class SwaggerConfig {
         .in(SecurityScheme.In.HEADER)
         .name("Authorization");
 
-    // Aplica o esquema como requisito global
     SecurityRequirement securityRequirement = new SecurityRequirement().addList("BearerAuth");
 
     return new OpenAPI()

@@ -33,7 +33,7 @@ public class AuthenticationController {
 
         Cookie jwtCookie = new Cookie(Constants.TOKEN, jwt);
         jwtCookie.setHttpOnly(true);
-        jwtCookie.setMaxAge(60*60*2);
+        jwtCookie.setMaxAge(60*60*24);
         jwtCookie.setAttribute("SameSite", "Strict");
         jwtCookie.setPath("/");
 
