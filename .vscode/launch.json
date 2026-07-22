@@ -8,7 +8,7 @@
       "mainClass": "com.open_doc.web_server.WebServerApplication",
       "projectName": "web-server",
       "args": "",
-      "envFile": "${workspaceFolder}/.env"
+      "envFile": "${workspaceFolder}/web-server/.env"
     }
   ]
 }
