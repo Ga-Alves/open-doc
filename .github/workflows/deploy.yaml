@@ -40,4 +40,4 @@ jobs:
             'cd ~/open-doc && \
              git pull git@github.com:Ga-Alves/open-doc.git && \
              cd infra && \
-             docker compose up -d --build'
+             docker compose --env-file .env.production up -d --build'
