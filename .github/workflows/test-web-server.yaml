@@ -1,0 +1,15 @@
+on:
+  pull_request:
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Test web-server
+        run: |
+          cd web-server
+          ./mvnw test
+      - name: Second steps
+        run: |
+          echo "hit"
