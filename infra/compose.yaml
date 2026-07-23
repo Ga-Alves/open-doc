@@ -32,7 +32,6 @@ services:
     environment:
       - APP_DOMAIN=${APP_DOMAIN}
       - SSL_EMAIL=${SSL_EMAIL}
-    restart: unless-stopped
     volumes:
       - ssl-cert:/etc/letsencrypt
       - webroot:/var/www/certbot
