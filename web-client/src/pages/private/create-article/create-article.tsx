@@ -24,7 +24,7 @@ export default function CreateArticle() {
         placeholder="Content"
         onChange={(e) => setContent(e.target.value)}
       />
-      <Button onClick={submitForm}> Submit</Button>
+      <Button onClick={submitForm}>Submit</Button>
 
       <div>
         {data?.map((article) => (
