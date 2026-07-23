@@ -1,3 +1,4 @@
+name: Production Deploy
 on:
   push:
     branches: [master]
