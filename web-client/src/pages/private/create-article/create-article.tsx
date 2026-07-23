@@ -11,7 +11,7 @@ export default function CreateArticle() {
   const { data } = useQuery(getArticlesOptions());
   return (
     <Layout>
-      <p>Lets create an article!</p>
+      <p>Lets create an article.</p>
       <input
         type="text"
         value={title}
