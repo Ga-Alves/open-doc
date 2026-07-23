@@ -1,0 +1,14 @@
+{
+  "configurations": [
+    {
+      "type": "java",
+      "name": "Spring Boot-WebServerApplication<web-server>",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "mainClass": "com.open_doc.web_server.WebServerApplication",
+      "projectName": "web-server",
+      "args": "",
+      "envFile": "${workspaceFolder}/web-server/.env"
+    }
+  ]
+}

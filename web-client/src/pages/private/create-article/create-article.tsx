@@ -1,20 +1,17 @@
-import { useNavigate } from "react-router";
+import { getArticlesOptions } from "@/api-client/@tanstack/react-query.gen";
+import Button from "@/shared/components/button/Button";
+import Layout from "@/shared/layout/layout";
+import { useQuery } from "@tanstack/react-query";
 import useCreateArticle from "./hooks/use-create-article";
-import { OPEN_DOCS_ROUTE } from "@/utils/constants";
 
 export default function CreateArticle() {
   const { title, setTitle, content, setContent, submitForm } =
     useCreateArticle();
 
-  const navigate = useNavigate();
+  const { data } = useQuery(getArticlesOptions());
   return (
-    <div>
-      <h1>WIP</h1>
-
-      <p>Lets create an article!</p>
-      <button onClick={() => navigate(OPEN_DOCS_ROUTE.HOME)}>
-        Go Back to Home.
-      </button>
+    <Layout>
+      <p>Lets create an article.</p>
       <input
         type="text"
         value={title}
@@ -27,7 +24,17 @@ export default function CreateArticle() {
         placeholder="Content"
         onChange={(e) => setContent(e.target.value)}
       />
-      <button onClick={submitForm}> Submit</button>
-    </div>
+      <Button onClick={submitForm}>Submit</Button>
+
+      <div>
+        {data?.map((article) => (
+          <div key={article.id}>
+            <h1>{article.title}</h1>
+            <span>{article.createdAt}</span>
+            <p>{article.content}</p>
+          </div>
+        ))}
+      </div>
+    </Layout>
   );
 }

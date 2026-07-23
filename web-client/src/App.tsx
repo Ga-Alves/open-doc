@@ -1,9 +1,9 @@
 import { Route, Routes } from "react-router";
 import CreateArticle from "./pages/private/create-article/create-article";
-import Home from "./pages/private/home/home";
+import Home from "./pages/public/home/home";
 import NotFound from "./pages/public/not-found/not-found";
 import SignIn from "./pages/public/sign-in/sign-in";
-import { OPEN_DOCS_ROUTE } from "./utils/constants";
+import { OPEN_DOCS_PRIVATE_ROUTE, OPEN_DOCS_ROUTE } from "./utils/constants";
 
 function App() {
   return (
@@ -12,10 +12,11 @@ function App() {
       <Route path="*" element={<NotFound />} />
 
       <Route path={OPEN_DOCS_ROUTE.HOME} element={<Home />} />
-      <Route
-        path={OPEN_DOCS_ROUTE.CREATE_ARTICLE}
-        element={<CreateArticle />}
-      />
+
+        <Route
+          path={OPEN_DOCS_PRIVATE_ROUTE.CREATE_ARTICLE}
+          element={<CreateArticle />}
+        />
     </Routes>
   );
 }

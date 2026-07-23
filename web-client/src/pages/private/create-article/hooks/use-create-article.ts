@@ -3,9 +3,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useCallback, useState } from "react";
 
 export default function useCreateArticle() {
-  const mutation = useMutation(
-    createArticleMutation({ credentials: "include" }),
-  );
+  const mutation = useMutation(createArticleMutation());
 
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");

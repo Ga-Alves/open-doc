@@ -1,14 +1,9 @@
-How to run:
+# How to run:
 
 1 - create a `.env` file from `.env.example`.
 
-2 - Load the environment variables
-
-```bash
-source .env
-```
-
-3 - setup database
+2 - setup database
+Replace the placeholders with your .env values!
 
 ```bash
 docker container run -it \
@@ -20,12 +15,14 @@ docker container run -it \
   -d postgres:latest
 ```
 
-4 - Start the application
+3 - Start the application
 
 ```bash
 ./mvnw spring-boot:run
 ```
 
-# TODO's
+## Test
 
-[ ] - JWT response in sign-in sign-up
+```bash
+./mvnw test
+```
