@@ -6,12 +6,16 @@ jobs:
   ci-web-backend:
     runs-on: ubuntu-latest
     steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
     - name: Run backend tests
       uses: ./.github/actions/web-server-ci
 
   ci-web-client:
     runs-on: ubuntu-latest
     steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
     - name: Run frontend tests
       uses: ./.github/actions/web-client-ci
 
