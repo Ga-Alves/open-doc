@@ -1,0 +1,19 @@
+name: 'CI web-server'
+description: 'Setup Java and runs backend test'
+runs:
+  using: 'composite'
+  steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Setup JDK
+      uses: actions/setup-java@v5
+      with:
+        distribution: 'oracle'
+        java-version: '25'
+
+    - name: Test web-server
+      run: |
+        cd web-server
+        ./mvnw test
+      shell: bash

@@ -3,27 +3,20 @@ on:
   push:
     branches: [master]
 jobs:
-  ci:
+  ci-web-backend:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+    - name: Run backend tests
+      uses: ./.github/actions/web-server-ci
 
-      - name: Setup JDK
-        uses: actions/setup-java@v5
-        with:
-          distribution: 'oracle'
-          java-version: '25'
+  ci-web-client:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Run frontend tests
+      uses: ./.github/actions/web-client-ci
 
-      - name: Test web-server
-        run: |
-          cd web-server
-          ./mvnw test
-      - name: Second steps
-        run: |
-          echo "hit"
   deploy:
-    needs: ci
+    needs: [ci-web-backend, ci-web-client]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code

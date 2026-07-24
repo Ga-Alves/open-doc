@@ -1,0 +1,30 @@
+name: 'CI web-client'
+description: 'Setup node, runs build and test'
+runs:
+  using: 'composite'
+  steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Setup Node
+      uses: actions/setup-node@v7
+      with:
+        node-version: '22'
+
+    - name: Install dependencies
+      run: |
+        cd web-client
+        npm ci
+      shell: bash
+
+    - name: Build
+      run: |
+        cd web-client
+        npm run build
+      shell: bash
+
+    - name: Run tests
+      run: |
+        cd web-client
+        npm test
+      shell: bash
