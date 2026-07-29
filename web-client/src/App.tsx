@@ -5,6 +5,8 @@ import NotFound from "./pages/public/not-found/not-found";
 import SignIn from "./pages/public/sign-in/sign-in";
 import { OPEN_DOCS_PRIVATE_ROUTE, OPEN_DOCS_ROUTE } from "./utils/constants";
 
+import "@ga-alves/oxygen-ui/style.css";
+
 function App() {
   return (
     <Routes>

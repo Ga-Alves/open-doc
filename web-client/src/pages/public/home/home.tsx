@@ -1,11 +1,12 @@
 import Layout from "@/shared/layout/layout";
+import { Card } from "@ga-alves/oxygen-ui";
 
 function Home() {
-
   return (
     <Layout>
-      <h1>Welcome</h1>
-      <p>Still WIP!</p>
+      <div className="w-lg">
+        <Card content="Still WIP!" title="Welcome" />
+      </div>
     </Layout>
   );
 }
