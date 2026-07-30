@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -25,19 +26,26 @@ public class ArticleController {
     private ArticleService articleService;
 
     @GetMapping
-    public List<ArticleResponseDTO> getArticles() {
-        return articleService.getArticles();
+    public List<ArticleResponseDTO> getArticles(@AuthenticationPrincipal String userId) {
+
+        return articleService.getArticles(UUID.fromString(userId));
     }
 
     @PostMapping
     public ArticleResponseDTO createArticle(
-            @RequestBody CreateArticleRequestDTO body) {
-        return articleService.createArticle(body);
+            @RequestBody CreateArticleRequestDTO body,
+            @AuthenticationPrincipal String userId) {
+
+        return articleService.createArticle(body, UUID.fromString(userId));
     }
 
     @PutMapping("/:id")
     public ArticleResponseDTO updateArticle(
-            @RequestBody UpdateArticleRequestDTO body, @RequestParam UUID id) {
-        return articleService.updateArticle(body, id);
+            @RequestBody UpdateArticleRequestDTO body,
+            @RequestParam UUID id,
+            @AuthenticationPrincipal String userId) {
+
+
+        return articleService.updateArticle(body, id, UUID.fromString(userId));
     }
 }

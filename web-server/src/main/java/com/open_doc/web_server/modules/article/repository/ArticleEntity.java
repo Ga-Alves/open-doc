@@ -32,6 +32,8 @@ public class ArticleEntity {
 
     private String content;
 
+    private UUID authorId;
+
     @CreationTimestamp
     private LocalDateTime createdAt;
 }

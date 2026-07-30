@@ -20,8 +20,8 @@ public class ArticleService {
     @Autowired
     ArticleRepository articleRepository;
 
-    public List<ArticleResponseDTO> getArticles() {
-        return articleRepository.findAll().stream()
+    public List<ArticleResponseDTO> getArticles(UUID userId) {
+        return articleRepository.findByAuthorId(userId).stream()
                 .map(article -> new ArticleResponseDTO(
                         article.getId(),
                         article.getTitle(),
@@ -30,11 +30,12 @@ public class ArticleService {
                 .toList();
     }
 
-    public ArticleResponseDTO createArticle(CreateArticleRequestDTO payload) {
+    public ArticleResponseDTO createArticle(CreateArticleRequestDTO payload, UUID userId) {
 
         ArticleEntity newArticle = ArticleEntity.builder()
                 .title(payload.title())
                 .content(payload.content())
+                .authorId(userId)
                 .build();
 
         ArticleEntity savedArticle = articleRepository.save(newArticle);
@@ -42,12 +43,18 @@ public class ArticleService {
         return new ArticleResponseDTO(savedArticle);
     }
 
-    public ArticleResponseDTO updateArticle(UpdateArticleRequestDTO payload, UUID articleId) {
+    public ArticleResponseDTO updateArticle(UpdateArticleRequestDTO payload, UUID articleId, UUID userId) {
 
         ArticleEntity article = articleRepository.findById(articleId).orElseThrow(
                 () -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND,
                         "Article not found with id: " + articleId));
+
+        if (!article.getAuthorId().equals(userId)) {
+            throw new ResponseStatusException(
+                    HttpStatus.UNAUTHORIZED,
+                    "You're not the owner of this article");
+        }
 
         article.setTitle(payload.title());
         article.setContent(payload.content());
