@@ -4,6 +4,18 @@ export type ClientOptions = {
     baseUrl: 'http://localhost:8080' | (string & {});
 };
 
+export type UpdateArticleRequestDto = {
+    title?: string;
+    content?: string;
+};
+
+export type ArticleResponseDto = {
+    id: string;
+    title: string;
+    content: string;
+    createdAt: string;
+};
+
 export type SignUpRequestDto = {
     name: string;
     password: string;
@@ -20,12 +32,23 @@ export type CreateArticleRequestDto = {
     content?: string;
 };
 
-export type ArticleResponseDto = {
-    id?: string;
-    title?: string;
-    content?: string;
-    createdAt?: string;
+export type UpdateArticleData = {
+    body: UpdateArticleRequestDto;
+    path?: never;
+    query: {
+        id: string;
+    };
+    url: '/api/v1/articles/:id';
 };
+
+export type UpdateArticleResponses = {
+    /**
+     * OK
+     */
+    200: ArticleResponseDto;
+};
+
+export type UpdateArticleResponse = UpdateArticleResponses[keyof UpdateArticleResponses];
 
 export type SignUpData = {
     body: SignUpRequestDto;

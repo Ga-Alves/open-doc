@@ -2,7 +2,7 @@
 
 import type { Client, Options as Options2, TDataShape } from './client';
 import { client } from './client.gen';
-import type { CreateArticleData, CreateArticleResponses, GetArticlesData, GetArticlesResponses, SignInData, SignInResponses, SignUpData, SignUpResponses } from './types.gen';
+import type { CreateArticleData, CreateArticleResponses, GetArticlesData, GetArticlesResponses, SignInData, SignInResponses, SignUpData, SignUpResponses, UpdateArticleData, UpdateArticleResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean> = Options2<TData, ThrowOnError> & {
     /**
@@ -17,6 +17,16 @@ export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends 
      */
     meta?: Record<string, unknown>;
 };
+
+export const updateArticle = <ThrowOnError extends boolean = false>(options: Options<UpdateArticleData, ThrowOnError>) => (options.client ?? client).put<UpdateArticleResponses, unknown, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/api/v1/articles/:id',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
 
 export const signUp = <ThrowOnError extends boolean = false>(options: Options<SignUpData, ThrowOnError>) => (options.client ?? client).post<SignUpResponses, unknown, ThrowOnError>({
     security: [{ scheme: 'bearer', type: 'http' }],
