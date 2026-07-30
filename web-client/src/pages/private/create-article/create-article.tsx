@@ -1,29 +1,64 @@
-import { useState } from "react";
 import { getArticlesOptions } from "@/api-client/@tanstack/react-query.gen";
+import ArticleCard from "@/shared/components/article-card/article-card";
 import Button from "@/shared/components/button/button";
 import Input from "@/shared/components/input/input";
 import Textarea from "@/shared/components/text-area/text-area";
-import ArticleCard from "@/shared/components/article-card/article-card";
 import Layout from "@/shared/layout/layout";
 import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
+import { useArticleForm } from "./hooks/use-article-form";
 import useCreateArticle from "./hooks/use-create-article";
+import useEditArticle from "./hooks/use-edit-article";
 
 export default function CreateArticle() {
-  const { title, setTitle, content, setContent, submitForm } = useCreateArticle();
-  const { data: articles } = useQuery(getArticlesOptions());
-
   const [editingId, setEditingId] = useState<string | null>(null);
 
-  const handleEdit = (article: { id: string; title: string; content: string }) => {
+  const form = useArticleForm();
+
+  const createArticle = useCreateArticle({
+    onSuccess: () => {
+      form.resetForm();
+      console.log("Article created successfully!");
+    },
+  });
+
+  const editArticle = useEditArticle({
+    onSuccess: () => {
+      setEditingId(null);
+      form.resetForm();
+      console.log("Article updated successfully!");
+    },
+  });
+
+  const { data: articles } = useQuery(getArticlesOptions());
+
+  const isEditing = editingId !== null;
+  const isLoading = createArticle.isLoading || editArticle.isLoading;
+
+  const handleEdit = (article: {
+    id: string;
+    title: string;
+    content: string;
+  }) => {
     setEditingId(article.id);
-    setTitle(article.title);
-    setContent(article.content);
+    form.setFormData(article.title, article.content);
   };
 
   const handleCancelEdit = () => {
     setEditingId(null);
-    setTitle("");
-    setContent("");
+    form.resetForm();
+  };
+
+  const handleSubmit = async () => {
+    if (!form.validateForm()) return;
+
+    const formData = form.getFormData();
+
+    if (isEditing && editingId) {
+      await editArticle.submitForm(editingId, formData);
+    } else {
+      await createArticle.submitForm(formData);
+    }
   };
 
   const handleDelete = (id: string) => {
@@ -36,10 +71,10 @@ export default function CreateArticle() {
         <section className="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm space-y-6">
           <div>
             <h1 className="text-xl font-bold tracking-tight">
-              {editingId ? "Edit Article" : "Draft new Article"}
+              {isEditing ? "Edit Article" : "Draft new Article"}
             </h1>
             <p className="text-sm text-gray-500">
-              {editingId
+              {isEditing
                 ? "Update your existing article content below."
                 : "Share your ideas with the world."}
             </p>
@@ -49,23 +84,36 @@ export default function CreateArticle() {
             <Input
               label="Title"
               type="text"
-              value={title}
+              value={form.title}
               placeholder="Enter a compelling title..."
-              onChange={(e) => setTitle(e.target.value)}
+              onChange={(e) => form.setTitle(e.target.value)}
+              disabled={isLoading}
             />
             <Textarea
               label="Content"
-              value={content}
+              value={form.content}
               placeholder="Write your article here..."
-              onChange={(e) => setContent(e.target.value)}
+              onChange={(e) => form.setContent(e.target.value)}
+              disabled={isLoading}
             />
 
             <div className="flex items-center gap-3 pt-2">
-              <Button onClick={submitForm}>
-                {editingId ? "Update Article" : "Publish Article"}
+              <Button
+                onClick={handleSubmit}
+                disabled={!form.isFormValid || isLoading}
+              >
+                {isLoading
+                  ? "Saving..."
+                  : isEditing
+                    ? "Update Article"
+                    : "Publish Article"}
               </Button>
-              {editingId && (
-                <Button variant="outline" onClick={handleCancelEdit}>
+              {isEditing && (
+                <Button
+                  variant="outline"
+                  onClick={handleCancelEdit}
+                  disabled={isLoading}
+                >
                   Cancel
                 </Button>
               )}

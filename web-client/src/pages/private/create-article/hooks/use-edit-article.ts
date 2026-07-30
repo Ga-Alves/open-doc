@@ -1,38 +1,39 @@
 import {
-  createArticleMutation,
   getArticlesQueryKey,
+  updateArticleMutation,
 } from "@/api-client/@tanstack/react-query.gen";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useCallback } from "react";
 
-interface UseCreateArticleProps {
+interface UseEditArticleProps {
   onSuccess?: () => void;
   onError?: (error: Error) => void;
 }
 
-export default function useCreateArticle({
+export default function useEditArticle({
   onSuccess,
   onError,
-}: UseCreateArticleProps = {}) {
+}: UseEditArticleProps = {}) {
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
-    ...createArticleMutation(),
+    ...updateArticleMutation(),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: getArticlesQueryKey() });
       onSuccess?.();
     },
     onError: (error: Error) => {
-      console.error("Error creating article:", error);
-      window.alert("Failed to create article. Please try again.");
+      console.error("Error updating article:", error);
+      window.alert("Failed to update article. Please try again.");
       onError?.(error);
     },
   });
 
   const submitForm = useCallback(
-    (formData: { title: string; content: string }) => {
+    (id: string, formData: { title: string; content: string }) => {
       return mutation.mutateAsync({
         body: formData,
+        query: { id },
       });
     },
     [mutation],
