@@ -38,15 +38,18 @@ class ArticleServiceTests {
     private ArticleService articleService;
 
     private UUID articleId;
+    private UUID authorId;
     private ArticleEntity articleEntity;
 
     @BeforeEach
     void setUp() {
         articleId = UUID.randomUUID();
+        authorId = UUID.randomUUID();
         articleEntity = ArticleEntity.builder()
                 .id(articleId)
                 .title("Título Original")
                 .content("Conteúdo Original")
+                .authorId(authorId)
                 .createdAt(LocalDateTime.now())
                 .build();
     }
@@ -66,7 +69,7 @@ class ArticleServiceTests {
             .thenReturn(articleEntity);
 
         // Act
-        var response = articleService.updateArticle(updateRequest, articleId);
+        var response = articleService.updateArticle(updateRequest, articleId, authorId);
 
         // Assert
         assertNotNull(response);
@@ -91,11 +94,34 @@ class ArticleServiceTests {
         // Act & Assert
         ResponseStatusException exception = assertThrows(
             ResponseStatusException.class,
-            () -> articleService.updateArticle(updateRequest, articleId)
+            () -> articleService.updateArticle(updateRequest, articleId, authorId)
         );
 
         assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());
         assertTrue(exception.getReason().contains("Article not found"));
+
+        verify(articleRepository).findById(articleId);
+        verify(articleRepository, never()).save(any());
+    }
+
+    @Test
+    void updateArticle_WhenUserIsNotTheArticleOwner_ShouldThrowUnauthorizedExecption() {
+        // Arrange
+        UpdateArticleRequestDTO updateRequest = new UpdateArticleRequestDTO(
+            "Novo Título",
+            "Novo Conteúdo"
+        );
+
+        when(articleRepository.findById(articleId))
+            .thenReturn(Optional.of(articleEntity));
+
+        // Act & Assert
+        ResponseStatusException exception = assertThrows(
+            ResponseStatusException.class,
+            () -> articleService.updateArticle(updateRequest, articleId, UUID.randomUUID())
+        );
+
+        assertEquals(HttpStatus.UNAUTHORIZED, exception.getStatusCode());
 
         verify(articleRepository).findById(articleId);
         verify(articleRepository, never()).save(any());
@@ -113,7 +139,7 @@ class ArticleServiceTests {
             .thenReturn(articleEntity);
 
         // Act
-        var response = articleService.createArticle(createRequest);
+        var response = articleService.createArticle(createRequest, authorId);
 
         // Assert
         assertNotNull(response);
