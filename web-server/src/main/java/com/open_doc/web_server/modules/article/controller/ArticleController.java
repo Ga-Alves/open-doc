@@ -1,17 +1,21 @@
 package com.open_doc.web_server.modules.article.controller;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.open_doc.web_server.modules.article.domain.ArticleService;
 import com.open_doc.web_server.modules.article.domain.dtos.ArticleResponseDTO;
 import com.open_doc.web_server.modules.article.domain.dtos.CreateArticleRequestDTO;
+import com.open_doc.web_server.modules.article.domain.dtos.UpdateArticleRequestDTO;
 
 @RestController
 @RequestMapping("/api/v1/articles")
@@ -20,7 +24,7 @@ public class ArticleController {
     @Autowired
     private ArticleService articleService;
 
-    @GetMapping("")
+    @GetMapping
     public List<ArticleResponseDTO> getArticles() {
         return articleService.getArticles();
     }
@@ -29,5 +33,11 @@ public class ArticleController {
     public ArticleResponseDTO createArticle(
             @RequestBody CreateArticleRequestDTO body) {
         return articleService.createArticle(body);
+    }
+
+    @PutMapping("/:id")
+    public ArticleResponseDTO updateArticle(
+            @RequestBody UpdateArticleRequestDTO body, @RequestParam UUID id) {
+        return articleService.updateArticle(body, id);
     }
 }

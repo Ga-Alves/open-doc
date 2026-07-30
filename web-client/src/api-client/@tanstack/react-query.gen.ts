@@ -3,8 +3,22 @@
 import { type DefaultError, queryOptions, type UseMutationOptions } from '@tanstack/react-query';
 
 import { client } from '../client.gen';
-import { createArticle, getArticles, type Options, signIn, signUp } from '../sdk.gen';
-import type { CreateArticleData, CreateArticleResponse, GetArticlesData, GetArticlesResponse, SignInData, SignInResponse, SignUpData, SignUpResponse } from '../types.gen';
+import { createArticle, getArticles, type Options, signIn, signUp, updateArticle } from '../sdk.gen';
+import type { CreateArticleData, CreateArticleResponse, GetArticlesData, GetArticlesResponse, SignInData, SignInResponse, SignUpData, SignUpResponse, UpdateArticleData, UpdateArticleResponse } from '../types.gen';
+
+export const updateArticleMutation = (options?: Partial<Options<UpdateArticleData>>): UseMutationOptions<UpdateArticleResponse, DefaultError, Options<UpdateArticleData>> => {
+    const mutationOptions: UseMutationOptions<UpdateArticleResponse, DefaultError, Options<UpdateArticleData>> = {
+        mutationFn: async (fnOptions) => {
+            const { data } = await updateArticle({
+                ...options,
+                ...fnOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
 
 export const signUpMutation = (options?: Partial<Options<SignUpData>>): UseMutationOptions<SignUpResponse, DefaultError, Options<SignUpData>> => {
     const mutationOptions: UseMutationOptions<SignUpResponse, DefaultError, Options<SignUpData>> = {
