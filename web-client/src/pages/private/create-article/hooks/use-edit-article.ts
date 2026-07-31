@@ -1,5 +1,6 @@
 import {
   getArticlesQueryKey,
+  getPublicArticlesQueryKey,
   updateArticleMutation,
 } from "@/api-client/@tanstack/react-query.gen";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -20,6 +21,8 @@ export default function useEditArticle({
     ...updateArticleMutation(),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: getArticlesQueryKey() });
+      queryClient.invalidateQueries({ queryKey: getPublicArticlesQueryKey() });
+
       onSuccess?.();
     },
     onError: (error: Error) => {
