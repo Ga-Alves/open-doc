@@ -8,5 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface ArticleRepository extends JpaRepository<ArticleEntity, UUID> {
 
   List<ArticleEntity> findByAuthorId(UUID authorId);
+  List<ArticleEntity> findByIsPublic(Boolean isPublic);
 
 }

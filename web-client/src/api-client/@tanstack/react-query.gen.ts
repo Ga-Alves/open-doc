@@ -3,8 +3,8 @@
 import { type DefaultError, queryOptions, type UseMutationOptions } from '@tanstack/react-query';
 
 import { client } from '../client.gen';
-import { createArticle, getArticles, type Options, signIn, signUp, updateArticle } from '../sdk.gen';
-import type { CreateArticleData, CreateArticleResponse, GetArticlesData, GetArticlesResponse, SignInData, SignInResponse, SignUpData, SignUpResponse, UpdateArticleData, UpdateArticleResponse } from '../types.gen';
+import { createArticle, getArticles, getPublicArticles, type Options, signIn, signUp, updateArticle } from '../sdk.gen';
+import type { CreateArticleData, CreateArticleResponse, GetArticlesData, GetArticlesResponse, GetPublicArticlesData, GetPublicArticlesResponse, SignInData, SignInResponse, SignUpData, SignUpResponse, UpdateArticleData, UpdateArticleResponse } from '../types.gen';
 
 export const updateArticleMutation = (options?: Partial<Options<UpdateArticleData>>): UseMutationOptions<UpdateArticleResponse, DefaultError, Options<UpdateArticleData>> => {
     const mutationOptions: UseMutationOptions<UpdateArticleResponse, DefaultError, Options<UpdateArticleData>> = {
@@ -109,3 +109,18 @@ export const createArticleMutation = (options?: Partial<Options<CreateArticleDat
     };
     return mutationOptions;
 };
+
+export const getPublicArticlesQueryKey = (options?: Options<GetPublicArticlesData>) => createQueryKey('getPublicArticles', options);
+
+export const getPublicArticlesOptions = (options?: Options<GetPublicArticlesData>) => queryOptions<GetPublicArticlesResponse, DefaultError, GetPublicArticlesResponse, ReturnType<typeof getPublicArticlesQueryKey>>({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await getPublicArticles({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: getPublicArticlesQueryKey(options)
+});

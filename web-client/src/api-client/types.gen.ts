@@ -116,3 +116,19 @@ export type CreateArticleResponses = {
 };
 
 export type CreateArticleResponse = CreateArticleResponses[keyof CreateArticleResponses];
+
+export type GetPublicArticlesData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/v1/articles/public';
+};
+
+export type GetPublicArticlesResponses = {
+    /**
+     * OK
+     */
+    200: Array<ArticleResponseDto>;
+};
+
+export type GetPublicArticlesResponse = GetPublicArticlesResponses[keyof GetPublicArticlesResponses];

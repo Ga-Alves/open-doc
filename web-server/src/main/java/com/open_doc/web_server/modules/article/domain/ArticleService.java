@@ -33,6 +33,17 @@ public class ArticleService {
                 .toList();
     }
 
+    public List<ArticleResponseDTO> getPublicArticles() {
+        return articleRepository.findByIsPublic(true).stream()
+                .map(article -> new ArticleResponseDTO(
+                        article.getId(),
+                        article.getTitle(),
+                        article.getContent(),
+                        article.getIsPublic(),
+                        article.getCreatedAt().toString()))
+                .toList();
+    }
+
     public ArticleResponseDTO createArticle(CreateArticleRequestDTO payload, UUID userId) {
 
         ArticleEntity newArticle = ArticleEntity.builder()
@@ -59,7 +70,6 @@ public class ArticleService {
                     HttpStatus.UNAUTHORIZED,
                     "You're not the owner of this article");
         }
-
 
         payload.title().ifPresent(article::setTitle);
         payload.content().ifPresent(article::setContent);
