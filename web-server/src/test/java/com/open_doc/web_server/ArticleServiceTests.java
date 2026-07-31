@@ -58,8 +58,9 @@ class ArticleServiceTests {
     void updateArticle_WhenArticleExists_ShouldUpdateSuccessfully() {
         // Arrange
         UpdateArticleRequestDTO updateRequest = new UpdateArticleRequestDTO(
-            "Novo Título",
-            "Novo Conteúdo"
+            Optional.of("Novo Título"),
+            Optional.of("Novo Conteúdo"),
+            Optional.of(false)
         );
 
         when(articleRepository.findById(articleId))
@@ -84,8 +85,9 @@ class ArticleServiceTests {
     void updateArticle_WhenArticleDoesNotExist_ShouldThrowNotFoundException() {
         // Arrange
         UpdateArticleRequestDTO updateRequest = new UpdateArticleRequestDTO(
-            "Novo Título",
-            "Novo Conteúdo"
+            Optional.of("Novo Título"),
+            Optional.of("Novo Conteúdo"),
+            Optional.of(false)
         );
 
         when(articleRepository.findById(articleId))
@@ -105,11 +107,12 @@ class ArticleServiceTests {
     }
 
     @Test
-    void updateArticle_WhenUserIsNotTheArticleOwner_ShouldThrowUnauthorizedExecption() {
+    void updateArticle_WhenUserIsNotTheArticleOwner_ShouldThrowUnauthorizedException() {
         // Arrange
         UpdateArticleRequestDTO updateRequest = new UpdateArticleRequestDTO(
-            "Novo Título",
-            "Novo Conteúdo"
+            Optional.of("Novo Título"),
+            Optional.of("Novo Conteúdo"),
+            Optional.empty()
         );
 
         when(articleRepository.findById(articleId))
@@ -132,7 +135,8 @@ class ArticleServiceTests {
         // Arrange
         CreateArticleRequestDTO createRequest = new CreateArticleRequestDTO(
             "Novo Artigo",
-            "Conteúdo do Artigo"
+            "Conteúdo do Artigo",
+            false
         );
 
         when(articleRepository.save(any(ArticleEntity.class)))

@@ -1,0 +1,1 @@
+ALTER TABLE article ADD COLUMN is_public BOOLEAN DEFAULT False;

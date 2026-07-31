@@ -7,12 +7,14 @@ export type ClientOptions = {
 export type UpdateArticleRequestDto = {
     title?: string;
     content?: string;
+    isPublic?: boolean;
 };
 
 export type ArticleResponseDto = {
     id: string;
     title: string;
     content: string;
+    isPublic: boolean;
     createdAt: string;
 };
 
@@ -30,6 +32,7 @@ export type SignInRequestDto = {
 export type CreateArticleRequestDto = {
     title?: string;
     content?: string;
+    isPublic?: boolean;
 };
 
 export type UpdateArticleData = {
