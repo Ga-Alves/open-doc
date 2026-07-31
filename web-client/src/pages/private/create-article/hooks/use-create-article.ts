@@ -1,6 +1,7 @@
 import {
   createArticleMutation,
   getArticlesQueryKey,
+  getPublicArticlesQueryKey,
 } from "@/api-client/@tanstack/react-query.gen";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useCallback } from "react";
@@ -20,6 +21,7 @@ export default function useCreateArticle({
     ...createArticleMutation(),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: getArticlesQueryKey() });
+      queryClient.invalidateQueries({ queryKey: getPublicArticlesQueryKey() });
       onSuccess?.();
     },
     onError: (error: Error) => {

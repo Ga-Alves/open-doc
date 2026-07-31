@@ -17,7 +17,7 @@ client.setConfig({
 });
 client.interceptors.response.use((response) => {
     if (response.status === 403) {
-        window.location.href = OPEN_DOCS_ROUTE.HOME;
+        window.location.href = OPEN_DOCS_ROUTE.SIGN_IN;
         return Promise.reject(new Error('Access Denied!'));
     }
     return response;

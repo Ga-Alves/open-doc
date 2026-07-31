@@ -7,12 +7,14 @@ export type ClientOptions = {
 export type UpdateArticleRequestDto = {
     title?: string;
     content?: string;
+    isPublic?: boolean;
 };
 
 export type ArticleResponseDto = {
     id: string;
     title: string;
     content: string;
+    isPublic: boolean;
     createdAt: string;
 };
 
@@ -30,6 +32,7 @@ export type SignInRequestDto = {
 export type CreateArticleRequestDto = {
     title?: string;
     content?: string;
+    isPublic?: boolean;
 };
 
 export type UpdateArticleData = {
@@ -113,3 +116,19 @@ export type CreateArticleResponses = {
 };
 
 export type CreateArticleResponse = CreateArticleResponses[keyof CreateArticleResponses];
+
+export type GetPublicArticlesData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/v1/articles/public';
+};
+
+export type GetPublicArticlesResponses = {
+    /**
+     * OK
+     */
+    200: Array<ArticleResponseDto>;
+};
+
+export type GetPublicArticlesResponse = GetPublicArticlesResponses[keyof GetPublicArticlesResponses];

@@ -22,13 +22,21 @@ import com.open_doc.web_server.modules.article.domain.dtos.UpdateArticleRequestD
 @RequestMapping("/api/v1/articles")
 public class ArticleController {
 
-    @Autowired
     private ArticleService articleService;
+
+    public ArticleController(ArticleService articleService) {
+        this.articleService = articleService;
+    }
 
     @GetMapping
     public List<ArticleResponseDTO> getArticles(@AuthenticationPrincipal String userId) {
 
         return articleService.getArticles(UUID.fromString(userId));
+    }
+
+    @GetMapping("/public")
+    public List<ArticleResponseDTO> getPublicArticles() {
+        return articleService.getPublicArticles();
     }
 
     @PostMapping
@@ -44,7 +52,6 @@ public class ArticleController {
             @RequestBody UpdateArticleRequestDTO body,
             @RequestParam UUID id,
             @AuthenticationPrincipal String userId) {
-
 
         return articleService.updateArticle(body, id, UUID.fromString(userId));
     }

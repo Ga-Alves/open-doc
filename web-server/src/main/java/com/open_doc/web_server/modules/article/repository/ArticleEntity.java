@@ -34,6 +34,8 @@ public class ArticleEntity {
 
     private UUID authorId;
 
+    private Boolean isPublic;
+
     @CreationTimestamp
     private LocalDateTime createdAt;
 }

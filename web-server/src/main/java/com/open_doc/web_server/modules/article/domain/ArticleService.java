@@ -3,7 +3,6 @@ package com.open_doc.web_server.modules.article.domain;
 import java.util.List;
 import java.util.UUID;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -17,8 +16,11 @@ import com.open_doc.web_server.modules.article.repository.ArticleRepository;
 @Service
 public class ArticleService {
 
-    @Autowired
     ArticleRepository articleRepository;
+
+    public ArticleService(ArticleRepository articleRepository) {
+        this.articleRepository = articleRepository;
+    }
 
     public List<ArticleResponseDTO> getArticles(UUID userId) {
         return articleRepository.findByAuthorId(userId).stream()
@@ -26,6 +28,18 @@ public class ArticleService {
                         article.getId(),
                         article.getTitle(),
                         article.getContent(),
+                        article.getIsPublic(),
+                        article.getCreatedAt().toString()))
+                .toList();
+    }
+
+    public List<ArticleResponseDTO> getPublicArticles() {
+        return articleRepository.findByIsPublic(true).stream()
+                .map(article -> new ArticleResponseDTO(
+                        article.getId(),
+                        article.getTitle(),
+                        article.getContent(),
+                        article.getIsPublic(),
                         article.getCreatedAt().toString()))
                 .toList();
     }
@@ -35,6 +49,7 @@ public class ArticleService {
         ArticleEntity newArticle = ArticleEntity.builder()
                 .title(payload.title())
                 .content(payload.content())
+                .isPublic(payload.isPublic())
                 .authorId(userId)
                 .build();
 
@@ -56,8 +71,9 @@ public class ArticleService {
                     "You're not the owner of this article");
         }
 
-        article.setTitle(payload.title());
-        article.setContent(payload.content());
+        payload.title().ifPresent(article::setTitle);
+        payload.content().ifPresent(article::setContent);
+        payload.isPublic().ifPresent(article::setIsPublic);
 
         articleRepository.save(article);
 
