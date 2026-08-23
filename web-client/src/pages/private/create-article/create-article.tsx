@@ -1,12 +1,12 @@
-import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
 import { getArticlesOptions } from "@/api-client/@tanstack/react-query.gen";
 import ArticleCard from "@/shared/components/article-card/article-card";
 import Button from "@/shared/components/button/button";
+import Editor from "@/shared/components/editor/editor";
 import Input from "@/shared/components/input/input";
 import Switch from "@/shared/components/switch/switch";
-import Textarea from "@/shared/components/text-area/text-area";
 import Layout from "@/shared/layout/layout";
+import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 import { useArticleForm } from "./hooks/use-article-form";
 import useCreateArticle from "./hooks/use-create-article";
 import useEditArticle from "./hooks/use-edit-article";
@@ -95,12 +95,11 @@ export default function CreateArticle() {
               disabled={isLoading}
             />
 
-            <Textarea
-              label="Content"
-              value={form.content}
-              placeholder="Write your article here..."
-              onChange={(e) => form.setContent(e.target.value)}
-              disabled={isLoading}
+            <Editor
+              key={editingId}
+              isEditable
+              initialContent={form.content}
+              onChange={(content) => form.setContent(content)}
             />
 
             <div className="p-4 rounded-xl bg-gray-50/50 border border-gray-100">
