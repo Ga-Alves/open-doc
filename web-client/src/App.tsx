@@ -1,5 +1,6 @@
 import { Route, Routes } from "react-router";
 import CreateArticle from "./pages/private/create-article/create-article";
+import Article from "./pages/public/article/article";
 import Home from "./pages/public/home/home";
 import NotFound from "./pages/public/not-found/not-found";
 import SignIn from "./pages/public/sign-in/sign-in";
@@ -14,11 +15,12 @@ function App() {
       <Route path="*" element={<NotFound />} />
 
       <Route path={OPEN_DOCS_ROUTE.HOME} element={<Home />} />
+      <Route path={OPEN_DOCS_ROUTE.ARTICLE} element={<Article />} />
 
-        <Route
-          path={OPEN_DOCS_PRIVATE_ROUTE.CREATE_ARTICLE}
-          element={<CreateArticle />}
-        />
+      <Route
+        path={OPEN_DOCS_PRIVATE_ROUTE.CREATE_ARTICLE}
+        element={<CreateArticle />}
+      />
     </Routes>
   );
 }

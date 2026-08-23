@@ -1,4 +1,6 @@
+import { useNavigate } from "react-router";
 import Button from "../button/button";
+import { OPEN_DOCS_ROUTE } from "@/utils/constants";
 
 export type Article = {
   id: string;
@@ -19,6 +21,10 @@ export default function ArticleCard({
   onEdit,
   onDelete,
 }: ArticleCardProps) {
+  const navigate = useNavigate();
+
+  const onClick = () => navigate(OPEN_DOCS_ROUTE.ARTICLE.replace(":id", article.id))
+
   return (
     <article className="group relative p-6 bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-all duration-200 flex flex-col justify-between gap-4">
       <div className="space-y-3">
@@ -38,12 +44,9 @@ export default function ArticleCard({
           </span>
         </div>
 
-        <h2 className="text-xl font-semibold text-gray-900 group-hover:text-gray-700 tracking-tight">
+        <h2 onClick={onClick} className="hover:underline hover:cursor-pointer text-xl font-semibold text-gray-900 group-hover:text-gray-700 tracking-tight">
           {article.title}
         </h2>
-        <p className="text-gray-600 text-sm line-clamp-3 leading-relaxed">
-          {article.content}
-        </p>
       </div>
 
       <div className="flex items-center gap-2 pt-4 border-t border-gray-50">

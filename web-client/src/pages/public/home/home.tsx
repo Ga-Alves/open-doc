@@ -1,4 +1,5 @@
 import { getPublicArticlesOptions } from "@/api-client/@tanstack/react-query.gen";
+
 import ArticleCard from "@/shared/components/article-card/article-card";
 import Layout from "@/shared/layout/layout";
 import { useQuery } from "@tanstack/react-query";

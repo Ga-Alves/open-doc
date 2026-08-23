@@ -1,1 +1,8 @@
 @import "tailwindcss";
+
+.no-preflight {
+  all: initial;
+}
+.no-preflight * {
+  all: revert;
+}
