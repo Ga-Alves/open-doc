@@ -1,10 +1,21 @@
-import { useEffect, useRef } from "react";
 import { exampleSetup } from "prosemirror-example-setup";
 import { Schema } from "prosemirror-model";
 import { schema } from "prosemirror-schema-basic";
 import { addListNodes } from "prosemirror-schema-list";
 import { EditorState } from "prosemirror-state";
 import { EditorView } from "prosemirror-view";
+import { useEffect, useRef } from "react";
+
+import { keymap } from "prosemirror-keymap";
+import {
+  redo,
+  undo,
+  yCursorPlugin,
+  ySyncPlugin,
+  yUndoPlugin,
+} from "y-prosemirror";
+import { WebrtcProvider } from "y-webrtc";
+import * as Y from "yjs";
 
 import "./styles/prosemirror-example-setup.css";
 import "./styles/prosemirror-gapcursor.css";
@@ -19,36 +30,40 @@ const mySchema = new Schema({
 type EditorProps = {
   isEditable: boolean;
   initialContent?: string;
-  onChange?: (content: string) => void;
 };
 
-export default function Editor({ isEditable, initialContent, onChange }: EditorProps) {
+export default function Editor({ isEditable, initialContent }: EditorProps) {
   const editorRef = useRef<HTMLDivElement>(null);
   const viewRef = useRef<EditorView | null>(null);
-  const onChangeRef = useRef(onChange);
-
-  useEffect(() => {
-    onChangeRef.current = onChange;
-  }, [onChange]);
 
   useEffect(() => {
     if (!editorRef.current) return;
+    if (viewRef.current) return;
+
+    // setup webRTC
+    const ydoc = new Y.Doc();
+    const provider = new WebrtcProvider("your-room-name-wasd", ydoc, {
+      password: "optional-room-password",
+      signaling: ["http://localhost:4444"],
+    });
+    const type = ydoc.getXmlFragment("prosemirror");
 
     const state = EditorState.create({
       doc: createInitialDoc(initialContent),
-      plugins: exampleSetup({ schema: mySchema, menuBar: isEditable }),
+      plugins: [
+        ySyncPlugin(type),
+        yCursorPlugin(provider.awareness),
+        yUndoPlugin(),
+        keymap({
+          "Mod-z": undo,
+          "Mod-y": redo,
+          "Mod-Shift-z": redo,
+        }),
+      ].concat(exampleSetup({ schema: mySchema })),
     });
 
     const view = new EditorView(editorRef.current, {
       state,
-      dispatchTransaction(tr) {
-        const newState = view.state.apply(tr);
-        view.updateState(newState);
-
-        if (tr.docChanged) {
-          onChangeRef.current?.(JSON.stringify(newState.doc.toJSON()));
-        }
-      },
       editable: () => isEditable,
     });
 
@@ -56,9 +71,10 @@ export default function Editor({ isEditable, initialContent, onChange }: EditorP
 
     return () => {
       view.destroy();
+      provider.destroy();
       viewRef.current = null;
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -68,7 +84,11 @@ export default function Editor({ isEditable, initialContent, onChange }: EditorP
     if (initialContent && initialContent !== currentDocJSON) {
       try {
         const newDoc = mySchema.nodeFromJSON(JSON.parse(initialContent));
-        const tr = viewRef.current.state.tr.replaceWith(0, viewRef.current.state.doc.content.size, newDoc);
+        const tr = viewRef.current.state.tr.replaceWith(
+          0,
+          viewRef.current.state.doc.content.size,
+          newDoc,
+        );
         viewRef.current.dispatch(tr);
       } catch (e) {
         console.error("Erro ao carregar conteúdo externo no editor", e);
@@ -86,8 +106,13 @@ export default function Editor({ isEditable, initialContent, onChange }: EditorP
 function createInitialDoc(json?: string) {
   try {
     return mySchema.nodeFromJSON(JSON.parse(json ?? ""));
-  } catch {
-    const paragraphContent = json?.trim().length ? json : "What you want to share?";
+  } catch (e) {
+
+    console.log(e);
+
+    const paragraphContent = json?.trim().length
+      ? json
+      : "What you want to share?";
     return mySchema.node("doc", null, [
       mySchema.node("paragraph", null, [mySchema.text(paragraphContent)]),
     ]);
