@@ -6,13 +6,12 @@ import { BrowserRouter } from "react-router";
 import { client } from "./api-client/client.gen.ts";
 import App from "./App.tsx";
 import { OPEN_DOCS_ROUTE } from "./utils/constants.ts";
+import { ENV_VARIABLES } from "./utils/environmentVariables.ts";
 
 const queryClient = new QueryClient();
 
-const baseUrl = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:8080";
-
 client.setConfig({
-  baseUrl: baseUrl,
+  baseUrl: ENV_VARIABLES.API_BASE_URL,
   credentials: "include"
 });
 client.interceptors.response.use((response) => {

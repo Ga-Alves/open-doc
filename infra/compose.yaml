@@ -27,30 +27,19 @@ services:
     depends_on:
       - postgres
 
-  certbot:
-    build: ./ssl-certificate/
+  webrtc-signaling:
+    build: ../webrtc-signaling
     environment:
-      - APP_DOMAIN=${APP_DOMAIN}
-      - SSL_EMAIL=${SSL_EMAIL}
-    volumes:
-      - ssl-cert:/etc/letsencrypt
-      - webroot:/var/www/certbot
-    network_mode: host
-
-  certbot-renew:
-    build: ./ssl-certificate-renew/
-    restart: unless-stopped
-    volumes:
-      - ssl-cert:/etc/letsencrypt
-      - webroot:/var/www/certbot
-    depends_on:
-      - web-server
+      - SIGNALING_PORT=${SIGNALING_PORT}
+    networks:
+      - open-doc-network
 
   web-client:
     build:
       context: ../web-client/
       args:
         VITE_API_BASE_URL: ${VITE_API_BASE_URL}
+        VITE_SIGNALING_SERVER_HOST: ${VITE_SIGNALING_SERVER_HOST}
     ports:
       - "80:80"
       - "443:443"
@@ -60,8 +49,27 @@ services:
     volumes:
       - ssl-cert:/etc/letsencrypt:ro
       - webroot:/var/www/certbot:ro
-    depends_on:
-      - certbot
+    # depends_on:
+    #   - certbot
+
+  # certbot:
+  #   build: ./ssl-certificate/
+  #   environment:
+  #     - APP_DOMAIN=${APP_DOMAIN}
+  #     - SSL_EMAIL=${SSL_EMAIL}
+  #   volumes:
+  #     - ssl-cert:/etc/letsencrypt
+  #     - webroot:/var/www/certbot
+  #   network_mode: host
+
+  # certbot-renew:
+  #   build: ./ssl-certificate-renew/
+  #   restart: unless-stopped
+  #   volumes:
+  #     - ssl-cert:/etc/letsencrypt
+  #     - webroot:/var/www/certbot
+  #   depends_on:
+  #     - web-server
 
 
 volumes:
