@@ -7,6 +7,7 @@ import SignIn from "./pages/public/sign-in/sign-in";
 import { OPEN_DOCS_PRIVATE_ROUTE, OPEN_DOCS_ROUTE } from "./utils/constants";
 
 import "@ga-alves/oxygen-ui/style.css";
+import CollaborativeArticle from "./pages/public/collaborative-article/collaborative-article";
 
 function App() {
   return (
@@ -16,6 +17,10 @@ function App() {
 
       <Route path={OPEN_DOCS_ROUTE.HOME} element={<Home />} />
       <Route path={OPEN_DOCS_ROUTE.ARTICLE} element={<Article />} />
+      <Route
+        path={OPEN_DOCS_ROUTE.COLLABORATIVE_ARTICLE}
+        element={<CollaborativeArticle />}
+      />
 
       <Route
         path={OPEN_DOCS_PRIVATE_ROUTE.CREATE_ARTICLE}

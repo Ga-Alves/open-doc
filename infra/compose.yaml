@@ -27,6 +27,31 @@ services:
     depends_on:
       - postgres
 
+  webrtc-signaling:
+    build: ../webrtc-signaling
+    environment:
+      - SIGNALING_PORT=${SIGNALING_PORT}
+    networks:
+      - open-doc-network
+
+  web-client:
+    build:
+      context: ../web-client/
+      args:
+        VITE_API_BASE_URL: ${VITE_API_BASE_URL}
+        VITE_SIGNALING_SERVER_HOST: ${VITE_SIGNALING_SERVER_HOST}
+    ports:
+      - "80:80"
+      - "443:443"
+    restart: unless-stopped
+    networks:
+      - open-doc-network
+    volumes:
+      - ssl-cert:/etc/letsencrypt:ro
+      - webroot:/var/www/certbot:ro
+    depends_on:
+      - certbot
+
   certbot:
     build: ./ssl-certificate/
     environment:
@@ -45,23 +70,6 @@ services:
       - webroot:/var/www/certbot
     depends_on:
       - web-server
-
-  web-client:
-    build:
-      context: ../web-client/
-      args:
-        VITE_API_BASE_URL: ${VITE_API_BASE_URL}
-    ports:
-      - "80:80"
-      - "443:443"
-    restart: unless-stopped
-    networks:
-      - open-doc-network
-    volumes:
-      - ssl-cert:/etc/letsencrypt:ro
-      - webroot:/var/www/certbot:ro
-    depends_on:
-      - certbot
 
 
 volumes:
