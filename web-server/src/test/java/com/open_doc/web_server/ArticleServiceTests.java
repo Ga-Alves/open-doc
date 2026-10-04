@@ -27,6 +27,8 @@ import com.open_doc.web_server.modules.article.domain.dtos.CreateArticleRequestD
 import com.open_doc.web_server.modules.article.domain.dtos.UpdateArticleRequestDTO;
 import com.open_doc.web_server.modules.article.repository.ArticleEntity;
 import com.open_doc.web_server.modules.article.repository.ArticleRepository;
+import com.open_doc.web_server.modules.user.repository.UsersEntity;
+import com.open_doc.web_server.modules.user.repository.UsersRepository;
 
 @ExtendWith(MockitoExtension.class)
 class ArticleServiceTests {
@@ -34,22 +36,32 @@ class ArticleServiceTests {
     @Mock
     private ArticleRepository articleRepository;
 
+    @Mock
+    private UsersRepository usersRepository;
+
     @InjectMocks
     private ArticleService articleService;
 
     private UUID articleId;
     private UUID authorId;
+    private UsersEntity author;
+
     private ArticleEntity articleEntity;
 
     @BeforeEach
     void setUp() {
         articleId = UUID.randomUUID();
         authorId = UUID.randomUUID();
+        author = UsersEntity.builder()
+                .id(authorId)
+                .name("John Doe")
+                .email("joedoe@mail.com")
+                .build();
         articleEntity = ArticleEntity.builder()
                 .id(articleId)
                 .title("Título Original")
                 .content("Conteúdo Original")
-                .authorId(authorId)
+                .author(author)
                 .createdAt(LocalDateTime.now())
                 .build();
     }
@@ -58,16 +70,15 @@ class ArticleServiceTests {
     void updateArticle_WhenArticleExists_ShouldUpdateSuccessfully() {
         // Arrange
         UpdateArticleRequestDTO updateRequest = new UpdateArticleRequestDTO(
-            Optional.of("Novo Título"),
-            Optional.of("Novo Conteúdo"),
-            Optional.of(false)
-        );
+                Optional.of("Novo Título"),
+                Optional.of("Novo Conteúdo"),
+                Optional.of(false));
 
         when(articleRepository.findById(articleId))
-            .thenReturn(Optional.of(articleEntity));
+                .thenReturn(Optional.of(articleEntity));
 
         when(articleRepository.save(any(ArticleEntity.class)))
-            .thenReturn(articleEntity);
+                .thenReturn(articleEntity);
 
         // Act
         var response = articleService.updateArticle(updateRequest, articleId, authorId);
@@ -85,19 +96,17 @@ class ArticleServiceTests {
     void updateArticle_WhenArticleDoesNotExist_ShouldThrowNotFoundException() {
         // Arrange
         UpdateArticleRequestDTO updateRequest = new UpdateArticleRequestDTO(
-            Optional.of("Novo Título"),
-            Optional.of("Novo Conteúdo"),
-            Optional.of(false)
-        );
+                Optional.of("Novo Título"),
+                Optional.of("Novo Conteúdo"),
+                Optional.of(false));
 
         when(articleRepository.findById(articleId))
-            .thenReturn(Optional.empty());
+                .thenReturn(Optional.empty());
 
         // Act & Assert
         ResponseStatusException exception = assertThrows(
-            ResponseStatusException.class,
-            () -> articleService.updateArticle(updateRequest, articleId, authorId)
-        );
+                ResponseStatusException.class,
+                () -> articleService.updateArticle(updateRequest, articleId, authorId));
 
         assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());
         assertTrue(exception.getReason().contains("Article not found"));
@@ -110,19 +119,17 @@ class ArticleServiceTests {
     void updateArticle_WhenUserIsNotTheArticleOwner_ShouldThrowUnauthorizedException() {
         // Arrange
         UpdateArticleRequestDTO updateRequest = new UpdateArticleRequestDTO(
-            Optional.of("Novo Título"),
-            Optional.of("Novo Conteúdo"),
-            Optional.empty()
-        );
+                Optional.of("Novo Título"),
+                Optional.of("Novo Conteúdo"),
+                Optional.empty());
 
         when(articleRepository.findById(articleId))
-            .thenReturn(Optional.of(articleEntity));
+                .thenReturn(Optional.of(articleEntity));
 
         // Act & Assert
         ResponseStatusException exception = assertThrows(
-            ResponseStatusException.class,
-            () -> articleService.updateArticle(updateRequest, articleId, UUID.randomUUID())
-        );
+                ResponseStatusException.class,
+                () -> articleService.updateArticle(updateRequest, articleId, UUID.randomUUID()));
 
         assertEquals(HttpStatus.UNAUTHORIZED, exception.getStatusCode());
 
@@ -134,13 +141,12 @@ class ArticleServiceTests {
     void createArticle_ShouldCreateSuccessfully() {
         // Arrange
         CreateArticleRequestDTO createRequest = new CreateArticleRequestDTO(
-            "Novo Artigo",
-            "Conteúdo do Artigo",
-            false
-        );
+                "Novo Artigo",
+                "Conteúdo do Artigo",
+                false);
 
         when(articleRepository.save(any(ArticleEntity.class)))
-            .thenReturn(articleEntity);
+                .thenReturn(articleEntity);
 
         // Act
         var response = articleService.createArticle(createRequest, authorId);

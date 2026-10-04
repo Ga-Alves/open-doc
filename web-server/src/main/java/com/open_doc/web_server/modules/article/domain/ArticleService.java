@@ -12,14 +12,18 @@ import com.open_doc.web_server.modules.article.domain.dtos.CreateArticleRequestD
 import com.open_doc.web_server.modules.article.domain.dtos.UpdateArticleRequestDTO;
 import com.open_doc.web_server.modules.article.repository.ArticleEntity;
 import com.open_doc.web_server.modules.article.repository.ArticleRepository;
+import com.open_doc.web_server.modules.user.repository.UsersEntity;
+import com.open_doc.web_server.modules.user.repository.UsersRepository;
 
 @Service
 public class ArticleService {
 
     ArticleRepository articleRepository;
+    UsersRepository usersRepository;
 
-    public ArticleService(ArticleRepository articleRepository) {
+    public ArticleService(ArticleRepository articleRepository, UsersRepository usersRepository) {
         this.articleRepository = articleRepository;
+        this.usersRepository = usersRepository;
     }
 
     public List<ArticleResponseDTO> getArticles(UUID userId) {
@@ -46,11 +50,13 @@ public class ArticleService {
 
     public ArticleResponseDTO createArticle(CreateArticleRequestDTO payload, UUID userId) {
 
+        UsersEntity author = usersRepository.getReferenceById(userId);
+
         ArticleEntity newArticle = ArticleEntity.builder()
                 .title(payload.title())
                 .content(payload.content())
                 .isPublic(payload.isPublic())
-                .authorId(userId)
+                .author(author)
                 .build();
 
         ArticleEntity savedArticle = articleRepository.save(newArticle);
@@ -65,7 +71,7 @@ public class ArticleService {
                         HttpStatus.NOT_FOUND,
                         "Article not found with id: " + articleId));
 
-        if (!article.getAuthorId().equals(userId)) {
+        if (!article.getAuthor().getId().equals(userId)) {
             throw new ResponseStatusException(
                     HttpStatus.UNAUTHORIZED,
                     "You're not the owner of this article");
