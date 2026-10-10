@@ -28,26 +28,6 @@ export const updateArticle = <ThrowOnError extends boolean = false>(options: Opt
     }
 });
 
-export const signUp = <ThrowOnError extends boolean = false>(options: Options<SignUpData, ThrowOnError>) => (options.client ?? client).post<SignUpResponses, unknown, ThrowOnError>({
-    security: [{ scheme: 'bearer', type: 'http' }],
-    url: '/api/v1/auth/sign-up',
-    ...options,
-    headers: {
-        'Content-Type': 'application/json',
-        ...options.headers
-    }
-});
-
-export const signIn = <ThrowOnError extends boolean = false>(options: Options<SignInData, ThrowOnError>) => (options.client ?? client).post<SignInResponses, unknown, ThrowOnError>({
-    security: [{ scheme: 'bearer', type: 'http' }],
-    url: '/api/v1/auth/sign-in',
-    ...options,
-    headers: {
-        'Content-Type': 'application/json',
-        ...options.headers
-    }
-});
-
 export const getArticles = <ThrowOnError extends boolean = false>(options?: Options<GetArticlesData, ThrowOnError>) => (options?.client ?? client).get<GetArticlesResponses, unknown, ThrowOnError>({
     security: [{ scheme: 'bearer', type: 'http' }],
     url: '/api/v1/articles',
@@ -57,6 +37,26 @@ export const getArticles = <ThrowOnError extends boolean = false>(options?: Opti
 export const createArticle = <ThrowOnError extends boolean = false>(options: Options<CreateArticleData, ThrowOnError>) => (options.client ?? client).post<CreateArticleResponses, unknown, ThrowOnError>({
     security: [{ scheme: 'bearer', type: 'http' }],
     url: '/api/v1/articles',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+export const signUp = <ThrowOnError extends boolean = false>(options: Options<SignUpData, ThrowOnError>) => (options.client ?? client).post<SignUpResponses, unknown, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/api/v1/accounts/sign-up',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+export const signIn = <ThrowOnError extends boolean = false>(options: Options<SignInData, ThrowOnError>) => (options.client ?? client).post<SignInResponses, unknown, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/api/v1/accounts/sign-in',
     ...options,
     headers: {
         'Content-Type': 'application/json',

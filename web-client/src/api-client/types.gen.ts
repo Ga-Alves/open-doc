@@ -18,6 +18,12 @@ export type ArticleResponseDto = {
     createdAt: string;
 };
 
+export type CreateArticleRequestDto = {
+    title?: string;
+    content?: string;
+    isPublic?: boolean;
+};
+
 export type SignUpRequestDto = {
     name: string;
     password: string;
@@ -27,12 +33,6 @@ export type SignUpRequestDto = {
 export type SignInRequestDto = {
     password: string;
     email: string;
-};
-
-export type CreateArticleRequestDto = {
-    title?: string;
-    content?: string;
-    isPublic?: boolean;
 };
 
 export type UpdateArticleData = {
@@ -52,38 +52,6 @@ export type UpdateArticleResponses = {
 };
 
 export type UpdateArticleResponse = UpdateArticleResponses[keyof UpdateArticleResponses];
-
-export type SignUpData = {
-    body: SignUpRequestDto;
-    path?: never;
-    query?: never;
-    url: '/api/v1/auth/sign-up';
-};
-
-export type SignUpResponses = {
-    /**
-     * OK
-     */
-    200: string;
-};
-
-export type SignUpResponse = SignUpResponses[keyof SignUpResponses];
-
-export type SignInData = {
-    body: SignInRequestDto;
-    path?: never;
-    query?: never;
-    url: '/api/v1/auth/sign-in';
-};
-
-export type SignInResponses = {
-    /**
-     * OK
-     */
-    200: string;
-};
-
-export type SignInResponse = SignInResponses[keyof SignInResponses];
 
 export type GetArticlesData = {
     body?: never;
@@ -116,6 +84,38 @@ export type CreateArticleResponses = {
 };
 
 export type CreateArticleResponse = CreateArticleResponses[keyof CreateArticleResponses];
+
+export type SignUpData = {
+    body: SignUpRequestDto;
+    path?: never;
+    query?: never;
+    url: '/api/v1/accounts/sign-up';
+};
+
+export type SignUpResponses = {
+    /**
+     * OK
+     */
+    200: string;
+};
+
+export type SignUpResponse = SignUpResponses[keyof SignUpResponses];
+
+export type SignInData = {
+    body: SignInRequestDto;
+    path?: never;
+    query?: never;
+    url: '/api/v1/accounts/sign-in';
+};
+
+export type SignInResponses = {
+    /**
+     * OK
+     */
+    200: string;
+};
+
+export type SignInResponse = SignInResponses[keyof SignInResponses];
 
 export type GetPublicArticlesData = {
     body?: never;

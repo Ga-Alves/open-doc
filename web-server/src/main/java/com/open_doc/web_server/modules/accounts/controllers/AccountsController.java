@@ -1,6 +1,5 @@
 package com.open_doc.web_server.modules.accounts.controllers;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,13 +14,14 @@ import com.open_doc.web_server.modules.shared.Constants;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/v1/account")
-public class AccountController {
+@RequiredArgsConstructor
+@RequestMapping("/api/v1/accounts")
+public class AccountsController {
 
-    @Autowired
-    AccountService authenticationService;
+    final AccountService authenticationService;
 
     @PostMapping("/sign-up")
     public ResponseEntity<String> signUp(@RequestBody @Valid SignUpRequestDTO body) {

@@ -20,34 +20,6 @@ export const updateArticleMutation = (options?: Partial<Options<UpdateArticleDat
     return mutationOptions;
 };
 
-export const signUpMutation = (options?: Partial<Options<SignUpData>>): UseMutationOptions<SignUpResponse, DefaultError, Options<SignUpData>> => {
-    const mutationOptions: UseMutationOptions<SignUpResponse, DefaultError, Options<SignUpData>> = {
-        mutationFn: async (fnOptions) => {
-            const { data } = await signUp({
-                ...options,
-                ...fnOptions,
-                throwOnError: true
-            });
-            return data;
-        }
-    };
-    return mutationOptions;
-};
-
-export const signInMutation = (options?: Partial<Options<SignInData>>): UseMutationOptions<SignInResponse, DefaultError, Options<SignInData>> => {
-    const mutationOptions: UseMutationOptions<SignInResponse, DefaultError, Options<SignInData>> = {
-        mutationFn: async (fnOptions) => {
-            const { data } = await signIn({
-                ...options,
-                ...fnOptions,
-                throwOnError: true
-            });
-            return data;
-        }
-    };
-    return mutationOptions;
-};
-
 export type QueryKey<TOptions extends Options> = [
     Pick<TOptions, 'baseUrl' | 'body' | 'headers' | 'path' | 'query'> & {
         _id: string;
@@ -100,6 +72,34 @@ export const createArticleMutation = (options?: Partial<Options<CreateArticleDat
     const mutationOptions: UseMutationOptions<CreateArticleResponse, DefaultError, Options<CreateArticleData>> = {
         mutationFn: async (fnOptions) => {
             const { data } = await createArticle({
+                ...options,
+                ...fnOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
+
+export const signUpMutation = (options?: Partial<Options<SignUpData>>): UseMutationOptions<SignUpResponse, DefaultError, Options<SignUpData>> => {
+    const mutationOptions: UseMutationOptions<SignUpResponse, DefaultError, Options<SignUpData>> = {
+        mutationFn: async (fnOptions) => {
+            const { data } = await signUp({
+                ...options,
+                ...fnOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
+
+export const signInMutation = (options?: Partial<Options<SignInData>>): UseMutationOptions<SignInResponse, DefaultError, Options<SignInData>> => {
+    const mutationOptions: UseMutationOptions<SignInResponse, DefaultError, Options<SignInData>> = {
+        mutationFn: async (fnOptions) => {
+            const { data } = await signIn({
                 ...options,
                 ...fnOptions,
                 throwOnError: true
