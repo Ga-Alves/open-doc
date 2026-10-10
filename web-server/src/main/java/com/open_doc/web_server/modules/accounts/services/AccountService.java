@@ -1,6 +1,5 @@
 package com.open_doc.web_server.modules.accounts.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -14,17 +13,15 @@ import com.open_doc.web_server.modules.accounts.repositories.AccountsRepository;
 import com.open_doc.web_server.modules.accounts.services.dtos.SignInRequestDTO;
 import com.open_doc.web_server.modules.accounts.services.dtos.SignUpRequestDTO;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class AccountService {
 
-    @Autowired
-    private AccountsRepository userAuthRepository;
-
-    @Autowired
-    private AuthenticationManager authenticationManager;
-
-    @Autowired
-    private TokenService tokenService;
+    private final AccountsRepository userAuthRepository;
+    private final AuthenticationManager authenticationManager;
+    private final TokenService tokenService;
 
     public ResponseEntity<String> signUp(SignUpRequestDTO body) {
         UserDetails userAuth = userAuthRepository.findByEmail(body.email());

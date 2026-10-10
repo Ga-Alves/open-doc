@@ -6,8 +6,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.open_doc.web_server.modules.accounts.domain.SignupLinksEntity;
 import com.open_doc.web_server.modules.accounts.services.AccountService;
+import com.open_doc.web_server.modules.accounts.services.SignupLinksService;
 import com.open_doc.web_server.modules.accounts.services.dtos.SignInRequestDTO;
+import com.open_doc.web_server.modules.accounts.services.dtos.SignUpLinkResponseDTO;
 import com.open_doc.web_server.modules.accounts.services.dtos.SignUpRequestDTO;
 import com.open_doc.web_server.modules.shared.Constants;
 
@@ -22,6 +25,7 @@ import lombok.RequiredArgsConstructor;
 public class AccountsController {
 
     final AccountService authenticationService;
+    final SignupLinksService signupLinksService;
 
     @PostMapping("/sign-up")
     public ResponseEntity<String> signUp(@RequestBody @Valid SignUpRequestDTO body) {
@@ -43,4 +47,9 @@ public class AccountsController {
         return ResponseEntity.ok(null);
     }
 
+    @PostMapping("/sign-up/link")
+    public SignUpLinkResponseDTO createSignupLink() {
+        SignupLinksEntity entity = signupLinksService.createSignUpLink();
+        return SignUpLinkResponseDTO.from(entity);
+    }
 }

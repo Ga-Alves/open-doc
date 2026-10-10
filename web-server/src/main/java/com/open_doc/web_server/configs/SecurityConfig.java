@@ -21,12 +21,14 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.open_doc.web_server.infra.security.SecurityFilter;
 
+import lombok.RequiredArgsConstructor;
+
 @Configuration
+@RequiredArgsConstructor
 @EnableWebSecurity
 public class SecurityConfig {
 
-  @Autowired
-  private SecurityFilter securityFilter;
+  private final SecurityFilter securityFilter;
 
   private static final String[] SWAGGER_PATHS = {
       "/v3/api-docs/**",
@@ -49,7 +51,7 @@ public class SecurityConfig {
             .requestMatchers(HttpMethod.POST, "/api/v1/accounts/sign-in").permitAll()
             .requestMatchers(HttpMethod.GET, "/api/v1/articles/public").permitAll()
             .requestMatchers(SWAGGER_PATHS).permitAll()
-            .requestMatchers(HttpMethod.POST, "/api/v1/accounts").hasRole("ADMIN")
+            .requestMatchers(HttpMethod.POST, "/api/v1/accounts/sign-up/link").hasRole("ADMIN")
             .anyRequest().authenticated())
         .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
         .build();
