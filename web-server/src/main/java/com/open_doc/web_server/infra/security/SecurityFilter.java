@@ -10,9 +10,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.open_doc.web_server.modules.authentication.domain.TokenService;
-import com.open_doc.web_server.modules.authentication.domain.enums.UserRole;
-import com.open_doc.web_server.modules.authentication.repository.UserAuthEntity;
+import com.open_doc.web_server.modules.accounts.domain.AccountsEntity;
+import com.open_doc.web_server.modules.accounts.domain.enums.AccountRole;
+import com.open_doc.web_server.modules.accounts.services.TokenService;
 import com.open_doc.web_server.modules.shared.Constants;
 
 import jakarta.servlet.FilterChain;
@@ -34,7 +34,7 @@ public class SecurityFilter extends OncePerRequestFilter {
 
     if (token != null) {
       this.tokenService.validateToken(token);
-      UserRole userRole = tokenService.getRole(token);
+      AccountRole userRole = tokenService.getRole(token);
       String subject = tokenService.getSubject(token);
 
       UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(subject, null,
@@ -63,8 +63,8 @@ public class SecurityFilter extends OncePerRequestFilter {
 
   }
 
-  private List<SimpleGrantedAuthority> getAuthoritiesBasedOnRole(UserRole role) {
-    return UserAuthEntity.getAuthoritiesByUserRole(role);
+  private List<SimpleGrantedAuthority> getAuthoritiesBasedOnRole(AccountRole role) {
+    return AccountsEntity.getAuthoritiesByAccountRole(role);
   }
 
 }

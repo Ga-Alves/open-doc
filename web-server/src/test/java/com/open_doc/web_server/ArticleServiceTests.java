@@ -22,13 +22,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.open_doc.web_server.modules.article.domain.ArticleService;
-import com.open_doc.web_server.modules.article.domain.dtos.CreateArticleRequestDTO;
-import com.open_doc.web_server.modules.article.domain.dtos.UpdateArticleRequestDTO;
-import com.open_doc.web_server.modules.article.repository.ArticleEntity;
-import com.open_doc.web_server.modules.article.repository.ArticleRepository;
-import com.open_doc.web_server.modules.user.repository.UsersEntity;
-import com.open_doc.web_server.modules.user.repository.UsersRepository;
+import com.open_doc.web_server.modules.accounts.domain.AccountsEntity;
+import com.open_doc.web_server.modules.accounts.repositories.AccountsRepository;
+import com.open_doc.web_server.modules.articles.domain.ArticleEntity;
+import com.open_doc.web_server.modules.articles.services.dtos.CreateArticleRequestDTO;
+import com.open_doc.web_server.modules.articles.services.dtos.UpdateArticleRequestDTO;
+import com.open_doc.web_server.modules.articles.repositories.ArticleRepository;
+import com.open_doc.web_server.modules.articles.services.ArticleService;
 
 @ExtendWith(MockitoExtension.class)
 class ArticleServiceTests {
@@ -37,14 +37,14 @@ class ArticleServiceTests {
     private ArticleRepository articleRepository;
 
     @Mock
-    private UsersRepository usersRepository;
+    private AccountsRepository accountsRepository;
 
     @InjectMocks
     private ArticleService articleService;
 
     private UUID articleId;
     private UUID authorId;
-    private UsersEntity author;
+    private AccountsEntity author;
 
     private ArticleEntity articleEntity;
 
@@ -52,7 +52,7 @@ class ArticleServiceTests {
     void setUp() {
         articleId = UUID.randomUUID();
         authorId = UUID.randomUUID();
-        author = UsersEntity.builder()
+        author = AccountsEntity.builder()
                 .id(authorId)
                 .name("John Doe")
                 .email("joedoe@mail.com")
@@ -61,7 +61,7 @@ class ArticleServiceTests {
                 .id(articleId)
                 .title("Título Original")
                 .content("Conteúdo Original")
-                .author(author)
+                .authorId(authorId)
                 .createdAt(LocalDateTime.now())
                 .build();
     }
