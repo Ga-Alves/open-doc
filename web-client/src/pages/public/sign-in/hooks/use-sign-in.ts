@@ -1,6 +1,9 @@
-import { signInMutation } from "@/api-client/@tanstack/react-query.gen";
+import {
+  myAccountQueryKey,
+  signInMutation,
+} from "@/api-client/@tanstack/react-query.gen";
 import { OPEN_DOCS_ROUTE } from "@/utils/constants";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useCallback, useState } from "react";
 import { useNavigate } from "react-router";
 
@@ -15,7 +18,14 @@ const initialFormState: SubmitForm = {
 };
 
 export default function useSignIn() {
-  const mutation = useMutation(signInMutation());
+  const queryClient = useQueryClient();
+  const mutation = useMutation({
+    ...signInMutation(),
+    onSuccess: () =>
+      queryClient.invalidateQueries({
+        queryKey: myAccountQueryKey(),
+      }),
+  });
   const navigate = useNavigate();
 
   const [formState, setFormState] = useState<SubmitForm>(initialFormState);
@@ -23,12 +33,12 @@ export default function useSignIn() {
   const submitForm = useCallback(async () => {
     if (!validateForm(formState)) return;
 
-    mutation
-      .mutateAsync({
-        body: formState,
-        credentials: "include",
-      })
-      .then(() => navigate(OPEN_DOCS_ROUTE.HOME));
+    await mutation.mutateAsync({
+      body: formState,
+      credentials: "include",
+    });
+
+    navigate(OPEN_DOCS_ROUTE.HOME);
   }, [formState, mutation, navigate]);
 
   const changeEmail = useCallback(
@@ -45,6 +55,7 @@ export default function useSignIn() {
     changePassword,
     formState,
     submitForm,
+    isLoading: mutation.isPending,
   };
 }
 
