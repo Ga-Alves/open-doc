@@ -1,0 +1,19 @@
+package com.open_doc.web_server.modules.articles.services.dtos;
+
+import java.util.UUID;
+
+import com.open_doc.web_server.modules.articles.domain.ArticleEntity;
+
+import jakarta.validation.constraints.NotBlank;
+
+public record ArticleResponseDTO(@NotBlank UUID id,
+        @NotBlank String title,
+        @NotBlank String content,
+        @NotBlank Boolean isPublic,
+        @NotBlank String createdAt) {
+
+    public ArticleResponseDTO(ArticleEntity article) {
+        this(article.getId(), article.getTitle(), article.getContent(), article.getIsPublic(),
+                article.getCreatedAt().toString());
+    }
+}

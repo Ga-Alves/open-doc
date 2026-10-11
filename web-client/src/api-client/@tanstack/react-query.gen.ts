@@ -3,41 +3,13 @@
 import { type DefaultError, queryOptions, type UseMutationOptions } from '@tanstack/react-query';
 
 import { client } from '../client.gen';
-import { createArticle, getArticles, getPublicArticles, type Options, signIn, signUp, updateArticle } from '../sdk.gen';
-import type { CreateArticleData, CreateArticleResponse, GetArticlesData, GetArticlesResponse, GetPublicArticlesData, GetPublicArticlesResponse, SignInData, SignInResponse, SignUpData, SignUpResponse, UpdateArticleData, UpdateArticleResponse } from '../types.gen';
+import { createArticle, createSignupLink, getArticles, getPublicArticles, listAccounts, myAccount, type Options, signIn, signUp, updateArticle } from '../sdk.gen';
+import type { CreateArticleData, CreateArticleResponse, CreateSignupLinkData, CreateSignupLinkResponse, GetArticlesData, GetArticlesResponse, GetPublicArticlesData, GetPublicArticlesResponse, ListAccountsData, ListAccountsResponse, MyAccountData, MyAccountResponse, SignInData, SignInResponse, SignUpData, SignUpResponse, UpdateArticleData, UpdateArticleResponse } from '../types.gen';
 
 export const updateArticleMutation = (options?: Partial<Options<UpdateArticleData>>): UseMutationOptions<UpdateArticleResponse, DefaultError, Options<UpdateArticleData>> => {
     const mutationOptions: UseMutationOptions<UpdateArticleResponse, DefaultError, Options<UpdateArticleData>> = {
         mutationFn: async (fnOptions) => {
             const { data } = await updateArticle({
-                ...options,
-                ...fnOptions,
-                throwOnError: true
-            });
-            return data;
-        }
-    };
-    return mutationOptions;
-};
-
-export const signUpMutation = (options?: Partial<Options<SignUpData>>): UseMutationOptions<SignUpResponse, DefaultError, Options<SignUpData>> => {
-    const mutationOptions: UseMutationOptions<SignUpResponse, DefaultError, Options<SignUpData>> = {
-        mutationFn: async (fnOptions) => {
-            const { data } = await signUp({
-                ...options,
-                ...fnOptions,
-                throwOnError: true
-            });
-            return data;
-        }
-    };
-    return mutationOptions;
-};
-
-export const signInMutation = (options?: Partial<Options<SignInData>>): UseMutationOptions<SignInResponse, DefaultError, Options<SignInData>> => {
-    const mutationOptions: UseMutationOptions<SignInResponse, DefaultError, Options<SignInData>> = {
-        mutationFn: async (fnOptions) => {
-            const { data } = await signIn({
                 ...options,
                 ...fnOptions,
                 throwOnError: true
@@ -110,6 +82,48 @@ export const createArticleMutation = (options?: Partial<Options<CreateArticleDat
     return mutationOptions;
 };
 
+export const signUpMutation = (options?: Partial<Options<SignUpData>>): UseMutationOptions<SignUpResponse, DefaultError, Options<SignUpData>> => {
+    const mutationOptions: UseMutationOptions<SignUpResponse, DefaultError, Options<SignUpData>> = {
+        mutationFn: async (fnOptions) => {
+            const { data } = await signUp({
+                ...options,
+                ...fnOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
+
+export const createSignupLinkMutation = (options?: Partial<Options<CreateSignupLinkData>>): UseMutationOptions<CreateSignupLinkResponse, DefaultError, Options<CreateSignupLinkData>> => {
+    const mutationOptions: UseMutationOptions<CreateSignupLinkResponse, DefaultError, Options<CreateSignupLinkData>> = {
+        mutationFn: async (fnOptions) => {
+            const { data } = await createSignupLink({
+                ...options,
+                ...fnOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
+
+export const signInMutation = (options?: Partial<Options<SignInData>>): UseMutationOptions<SignInResponse, DefaultError, Options<SignInData>> => {
+    const mutationOptions: UseMutationOptions<SignInResponse, DefaultError, Options<SignInData>> = {
+        mutationFn: async (fnOptions) => {
+            const { data } = await signIn({
+                ...options,
+                ...fnOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
+
 export const getPublicArticlesQueryKey = (options?: Options<GetPublicArticlesData>) => createQueryKey('getPublicArticles', options);
 
 export const getPublicArticlesOptions = (options?: Options<GetPublicArticlesData>) => queryOptions<GetPublicArticlesResponse, DefaultError, GetPublicArticlesResponse, ReturnType<typeof getPublicArticlesQueryKey>>({
@@ -123,4 +137,34 @@ export const getPublicArticlesOptions = (options?: Options<GetPublicArticlesData
         return data;
     },
     queryKey: getPublicArticlesQueryKey(options)
+});
+
+export const listAccountsQueryKey = (options?: Options<ListAccountsData>) => createQueryKey('listAccounts', options);
+
+export const listAccountsOptions = (options?: Options<ListAccountsData>) => queryOptions<ListAccountsResponse, DefaultError, ListAccountsResponse, ReturnType<typeof listAccountsQueryKey>>({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await listAccounts({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: listAccountsQueryKey(options)
+});
+
+export const myAccountQueryKey = (options?: Options<MyAccountData>) => createQueryKey('myAccount', options);
+
+export const myAccountOptions = (options?: Options<MyAccountData>) => queryOptions<MyAccountResponse, DefaultError, MyAccountResponse, ReturnType<typeof myAccountQueryKey>>({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await myAccount({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: myAccountQueryKey(options)
 });

@@ -7,6 +7,8 @@ import SignIn from "./pages/public/sign-in/sign-in";
 import { OPEN_DOCS_PRIVATE_ROUTE, OPEN_DOCS_ROUTE } from "./utils/constants";
 
 import "@ga-alves/oxygen-ui/style.css";
+import AdminDashboard from "./pages/private/admin/admin-dashboard-page";
+import SignUpPage from "./pages/private/sign-up/sign-up";
 import CollaborativeArticle from "./pages/public/collaborative-article/collaborative-article";
 
 function App() {
@@ -14,17 +16,20 @@ function App() {
     <Routes>
       <Route path={OPEN_DOCS_ROUTE.SIGN_IN} element={<SignIn />} />
       <Route path="*" element={<NotFound />} />
-
       <Route path={OPEN_DOCS_ROUTE.HOME} element={<Home />} />
       <Route path={OPEN_DOCS_ROUTE.ARTICLE} element={<Article />} />
       <Route
         path={OPEN_DOCS_ROUTE.COLLABORATIVE_ARTICLE}
         element={<CollaborativeArticle />}
       />
-
       <Route
         path={OPEN_DOCS_PRIVATE_ROUTE.CREATE_ARTICLE}
         element={<CreateArticle />}
+      />{" "}
+      <Route path={OPEN_DOCS_PRIVATE_ROUTE.SIGN_UP} element={<SignUpPage />} />
+      <Route
+        path={OPEN_DOCS_PRIVATE_ROUTE.ADMIN_DASHBOARD}
+        element={<AdminDashboard />}
       />
     </Routes>
   );

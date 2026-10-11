@@ -1,0 +1,4 @@
+CREATE TABLE signup_links (
+    id         UUID PRIMARY KEY,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);

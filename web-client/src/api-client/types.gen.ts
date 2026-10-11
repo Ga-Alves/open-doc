@@ -18,10 +18,21 @@ export type ArticleResponseDto = {
     createdAt: string;
 };
 
+export type CreateArticleRequestDto = {
+    title?: string;
+    content?: string;
+    isPublic?: boolean;
+};
+
 export type SignUpRequestDto = {
     name: string;
     password: string;
     email: string;
+    sign_up_link: string;
+};
+
+export type SignUpLinkResponseDto = {
+    link?: string;
 };
 
 export type SignInRequestDto = {
@@ -29,10 +40,11 @@ export type SignInRequestDto = {
     email: string;
 };
 
-export type CreateArticleRequestDto = {
-    title?: string;
-    content?: string;
-    isPublic?: boolean;
+export type AccountResponseDto = {
+    name?: string;
+    email?: string;
+    id?: string;
+    role?: 'ADMIN' | 'USER';
 };
 
 export type UpdateArticleData = {
@@ -52,38 +64,6 @@ export type UpdateArticleResponses = {
 };
 
 export type UpdateArticleResponse = UpdateArticleResponses[keyof UpdateArticleResponses];
-
-export type SignUpData = {
-    body: SignUpRequestDto;
-    path?: never;
-    query?: never;
-    url: '/api/v1/auth/sign-up';
-};
-
-export type SignUpResponses = {
-    /**
-     * OK
-     */
-    200: string;
-};
-
-export type SignUpResponse = SignUpResponses[keyof SignUpResponses];
-
-export type SignInData = {
-    body: SignInRequestDto;
-    path?: never;
-    query?: never;
-    url: '/api/v1/auth/sign-in';
-};
-
-export type SignInResponses = {
-    /**
-     * OK
-     */
-    200: string;
-};
-
-export type SignInResponse = SignInResponses[keyof SignInResponses];
 
 export type GetArticlesData = {
     body?: never;
@@ -117,6 +97,54 @@ export type CreateArticleResponses = {
 
 export type CreateArticleResponse = CreateArticleResponses[keyof CreateArticleResponses];
 
+export type SignUpData = {
+    body: SignUpRequestDto;
+    path?: never;
+    query?: never;
+    url: '/api/v1/accounts/sign-up';
+};
+
+export type SignUpResponses = {
+    /**
+     * OK
+     */
+    200: string;
+};
+
+export type SignUpResponse = SignUpResponses[keyof SignUpResponses];
+
+export type CreateSignupLinkData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/v1/accounts/sign-up/link';
+};
+
+export type CreateSignupLinkResponses = {
+    /**
+     * OK
+     */
+    200: SignUpLinkResponseDto;
+};
+
+export type CreateSignupLinkResponse = CreateSignupLinkResponses[keyof CreateSignupLinkResponses];
+
+export type SignInData = {
+    body: SignInRequestDto;
+    path?: never;
+    query?: never;
+    url: '/api/v1/accounts/sign-in';
+};
+
+export type SignInResponses = {
+    /**
+     * OK
+     */
+    200: string;
+};
+
+export type SignInResponse = SignInResponses[keyof SignInResponses];
+
 export type GetPublicArticlesData = {
     body?: never;
     path?: never;
@@ -132,3 +160,35 @@ export type GetPublicArticlesResponses = {
 };
 
 export type GetPublicArticlesResponse = GetPublicArticlesResponses[keyof GetPublicArticlesResponses];
+
+export type ListAccountsData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/v1/accounts';
+};
+
+export type ListAccountsResponses = {
+    /**
+     * OK
+     */
+    200: Array<AccountResponseDto>;
+};
+
+export type ListAccountsResponse = ListAccountsResponses[keyof ListAccountsResponses];
+
+export type MyAccountData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/v1/accounts/me';
+};
+
+export type MyAccountResponses = {
+    /**
+     * OK
+     */
+    200: AccountResponseDto;
+};
+
+export type MyAccountResponse = MyAccountResponses[keyof MyAccountResponses];
