@@ -1,6 +1,7 @@
 package com.open_doc.web_server.modules.accounts.services;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -14,6 +15,7 @@ import com.open_doc.web_server.modules.accounts.domain.SignupLinksEntity;
 import com.open_doc.web_server.modules.accounts.domain.enums.AccountRole;
 import com.open_doc.web_server.modules.accounts.exceptions.InvalidSignUpLink;
 import com.open_doc.web_server.modules.accounts.exceptions.UserDoesNotExistOrPasswordMissMatchException;
+import com.open_doc.web_server.modules.accounts.exceptions.UserNotFoundException;
 import com.open_doc.web_server.modules.accounts.repositories.AccountsRepository;
 import com.open_doc.web_server.modules.accounts.repositories.SignupLinksRepository;
 import com.open_doc.web_server.modules.accounts.services.dtos.AccountResponseDTO;
@@ -77,5 +79,18 @@ public class AccountService {
                 .role(a.getRole())
                 .build())
                 .toList();
+    }
+
+    public AccountResponseDTO myAccount(UUID id) {
+
+        AccountsEntity me = accountsRepository.findById(id)
+                .orElseThrow(UserNotFoundException::new);
+
+        return AccountResponseDTO.builder()
+                .id(me.getId())
+                .name(me.getName())
+                .email(me.getEmail())
+                .role(me.getRole())
+                .build();
     }
 }

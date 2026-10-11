@@ -50,6 +50,7 @@ public class ArticleService {
                 .title(payload.title())
                 .content(payload.content())
                 .isPublic(payload.isPublic())
+                .authorId(userId)
                 .build();
 
         ArticleEntity savedArticle = articleRepository.save(newArticle);

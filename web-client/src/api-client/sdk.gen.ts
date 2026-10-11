@@ -2,7 +2,7 @@
 
 import type { Client, Options as Options2, TDataShape } from './client';
 import { client } from './client.gen';
-import type { CreateArticleData, CreateArticleResponses, CreateSignupLinkData, CreateSignupLinkResponses, GetArticlesData, GetArticlesResponses, GetPublicArticlesData, GetPublicArticlesResponses, SignInData, SignInResponses, SignUpData, SignUpResponses, UpdateArticleData, UpdateArticleResponses } from './types.gen';
+import type { CreateArticleData, CreateArticleResponses, CreateSignupLinkData, CreateSignupLinkResponses, GetArticlesData, GetArticlesResponses, GetPublicArticlesData, GetPublicArticlesResponses, ListAccountsData, ListAccountsResponses, MyAccountData, MyAccountResponses, SignInData, SignInResponses, SignUpData, SignUpResponses, UpdateArticleData, UpdateArticleResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean> = Options2<TData, ThrowOnError> & {
     /**
@@ -73,5 +73,17 @@ export const signIn = <ThrowOnError extends boolean = false>(options: Options<Si
 export const getPublicArticles = <ThrowOnError extends boolean = false>(options?: Options<GetPublicArticlesData, ThrowOnError>) => (options?.client ?? client).get<GetPublicArticlesResponses, unknown, ThrowOnError>({
     security: [{ scheme: 'bearer', type: 'http' }],
     url: '/api/v1/articles/public',
+    ...options
+});
+
+export const listAccounts = <ThrowOnError extends boolean = false>(options?: Options<ListAccountsData, ThrowOnError>) => (options?.client ?? client).get<ListAccountsResponses, unknown, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/api/v1/accounts',
+    ...options
+});
+
+export const myAccount = <ThrowOnError extends boolean = false>(options?: Options<MyAccountData, ThrowOnError>) => (options?.client ?? client).get<MyAccountResponses, unknown, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/api/v1/accounts/me',
     ...options
 });

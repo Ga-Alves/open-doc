@@ -17,15 +17,14 @@ import com.open_doc.web_server.modules.articles.services.dtos.ArticleResponseDTO
 import com.open_doc.web_server.modules.articles.services.dtos.CreateArticleRequestDTO;
 import com.open_doc.web_server.modules.articles.services.dtos.UpdateArticleRequestDTO;
 
+import lombok.RequiredArgsConstructor;
+
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/v1/articles")
 public class ArticleController {
 
-    private ArticleService articleService;
-
-    public ArticleController(ArticleService articleService) {
-        this.articleService = articleService;
-    }
+    private final ArticleService articleService;
 
     @GetMapping
     public List<ArticleResponseDTO> getArticles(@AuthenticationPrincipal String userId) {

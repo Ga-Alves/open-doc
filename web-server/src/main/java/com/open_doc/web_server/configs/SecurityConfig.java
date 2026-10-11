@@ -54,6 +54,7 @@ public class SecurityConfig {
             .requestMatchers(SWAGGER_PATHS).permitAll()
             .requestMatchers(HttpMethod.POST, "/api/v1/accounts/sign-up/link").hasRole("ADMIN")
             .requestMatchers(HttpMethod.GET, "/api/v1/accounts").hasRole("ADMIN")
+            .requestMatchers(HttpMethod.GET, "/api/v1/accounts/me").permitAll()
             .anyRequest().authenticated())
         .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
         .build();

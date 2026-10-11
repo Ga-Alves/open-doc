@@ -7,6 +7,7 @@ import { client } from "./api-client/client.gen.ts";
 import App from "./App.tsx";
 import { OPEN_DOCS_ROUTE } from "./utils/constants.ts";
 import { ENV_VARIABLES } from "./utils/environmentVariables.ts";
+import { AuthProvider } from "./shared/context/auth-provider.tsx";
 
 const queryClient = new QueryClient();
 
@@ -26,7 +27,9 @@ createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <BrowserRouter>
       <QueryClientProvider client={queryClient}>
-        <App />
+        <AuthProvider>
+          <App />
+        </AuthProvider>
         <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
     </BrowserRouter>

@@ -40,6 +40,13 @@ export type SignInRequestDto = {
     email: string;
 };
 
+export type AccountResponseDto = {
+    name?: string;
+    email?: string;
+    id?: string;
+    role?: 'ADMIN' | 'USER';
+};
+
 export type UpdateArticleData = {
     body: UpdateArticleRequestDto;
     path?: never;
@@ -153,3 +160,35 @@ export type GetPublicArticlesResponses = {
 };
 
 export type GetPublicArticlesResponse = GetPublicArticlesResponses[keyof GetPublicArticlesResponses];
+
+export type ListAccountsData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/v1/accounts';
+};
+
+export type ListAccountsResponses = {
+    /**
+     * OK
+     */
+    200: Array<AccountResponseDto>;
+};
+
+export type ListAccountsResponse = ListAccountsResponses[keyof ListAccountsResponses];
+
+export type MyAccountData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/v1/accounts/me';
+};
+
+export type MyAccountResponses = {
+    /**
+     * OK
+     */
+    200: AccountResponseDto;
+};
+
+export type MyAccountResponse = MyAccountResponses[keyof MyAccountResponses];

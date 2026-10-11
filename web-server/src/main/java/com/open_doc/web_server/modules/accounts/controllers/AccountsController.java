@@ -1,8 +1,10 @@
 package com.open_doc.web_server.modules.accounts.controllers;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -55,6 +57,11 @@ public class AccountsController {
     public SignUpLinkResponseDTO createSignupLink() {
         SignupLinksEntity entity = signupLinksService.createSignUpLink();
         return SignUpLinkResponseDTO.from(entity);
+    }
+
+    @GetMapping("/me")
+    public AccountResponseDTO myAccount(@AuthenticationPrincipal String userId) {
+        return accountService.myAccount(UUID.fromString(userId));
     }
 
     @GetMapping()
