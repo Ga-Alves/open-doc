@@ -7,4 +7,5 @@ export const OPEN_DOCS_ROUTE = {
 
 export const OPEN_DOCS_PRIVATE_ROUTE = {
   CREATE_ARTICLE: "/create-article",
+  SIGN_UP: "/sign-up/:id"
 }

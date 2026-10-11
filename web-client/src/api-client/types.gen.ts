@@ -28,6 +28,11 @@ export type SignUpRequestDto = {
     name: string;
     password: string;
     email: string;
+    sign_up_link: string;
+};
+
+export type SignUpLinkResponseDto = {
+    link?: string;
 };
 
 export type SignInRequestDto = {
@@ -100,6 +105,22 @@ export type SignUpResponses = {
 };
 
 export type SignUpResponse = SignUpResponses[keyof SignUpResponses];
+
+export type CreateSignupLinkData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/v1/accounts/sign-up/link';
+};
+
+export type CreateSignupLinkResponses = {
+    /**
+     * OK
+     */
+    200: SignUpLinkResponseDto;
+};
+
+export type CreateSignupLinkResponse = CreateSignupLinkResponses[keyof CreateSignupLinkResponses];
 
 export type SignInData = {
     body: SignInRequestDto;

@@ -23,6 +23,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 
@@ -31,26 +32,27 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
 public class AccountsEntity implements UserDetails{
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    public UUID id;
+    private UUID id;
 
-    public String name;
+    private String name;
 
-    public String email;
+    private String email;
 
-    public String encryptPassword;
+    private String encryptPassword;
 
     @Enumerated(EnumType.STRING)
-    public AccountRole role;
+    private AccountRole role;
 
     @CreationTimestamp
-    public LocalDateTime createdAt;
+    private LocalDateTime createdAt;
 
     @UpdateTimestamp
-    public LocalDateTime updatedAt;
+    private LocalDateTime updatedAt;
 
     public AccountsEntity(String name, String email, String encryptedPassword, AccountRole role ){
       this.name = name;

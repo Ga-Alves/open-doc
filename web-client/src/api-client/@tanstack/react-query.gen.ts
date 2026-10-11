@@ -3,8 +3,8 @@
 import { type DefaultError, queryOptions, type UseMutationOptions } from '@tanstack/react-query';
 
 import { client } from '../client.gen';
-import { createArticle, getArticles, getPublicArticles, type Options, signIn, signUp, updateArticle } from '../sdk.gen';
-import type { CreateArticleData, CreateArticleResponse, GetArticlesData, GetArticlesResponse, GetPublicArticlesData, GetPublicArticlesResponse, SignInData, SignInResponse, SignUpData, SignUpResponse, UpdateArticleData, UpdateArticleResponse } from '../types.gen';
+import { createArticle, createSignupLink, getArticles, getPublicArticles, type Options, signIn, signUp, updateArticle } from '../sdk.gen';
+import type { CreateArticleData, CreateArticleResponse, CreateSignupLinkData, CreateSignupLinkResponse, GetArticlesData, GetArticlesResponse, GetPublicArticlesData, GetPublicArticlesResponse, SignInData, SignInResponse, SignUpData, SignUpResponse, UpdateArticleData, UpdateArticleResponse } from '../types.gen';
 
 export const updateArticleMutation = (options?: Partial<Options<UpdateArticleData>>): UseMutationOptions<UpdateArticleResponse, DefaultError, Options<UpdateArticleData>> => {
     const mutationOptions: UseMutationOptions<UpdateArticleResponse, DefaultError, Options<UpdateArticleData>> = {
@@ -86,6 +86,20 @@ export const signUpMutation = (options?: Partial<Options<SignUpData>>): UseMutat
     const mutationOptions: UseMutationOptions<SignUpResponse, DefaultError, Options<SignUpData>> = {
         mutationFn: async (fnOptions) => {
             const { data } = await signUp({
+                ...options,
+                ...fnOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
+
+export const createSignupLinkMutation = (options?: Partial<Options<CreateSignupLinkData>>): UseMutationOptions<CreateSignupLinkResponse, DefaultError, Options<CreateSignupLinkData>> => {
+    const mutationOptions: UseMutationOptions<CreateSignupLinkResponse, DefaultError, Options<CreateSignupLinkData>> = {
+        mutationFn: async (fnOptions) => {
+            const { data } = await createSignupLink({
                 ...options,
                 ...fnOptions,
                 throwOnError: true

@@ -2,7 +2,7 @@
 
 import type { Client, Options as Options2, TDataShape } from './client';
 import { client } from './client.gen';
-import type { CreateArticleData, CreateArticleResponses, GetArticlesData, GetArticlesResponses, GetPublicArticlesData, GetPublicArticlesResponses, SignInData, SignInResponses, SignUpData, SignUpResponses, UpdateArticleData, UpdateArticleResponses } from './types.gen';
+import type { CreateArticleData, CreateArticleResponses, CreateSignupLinkData, CreateSignupLinkResponses, GetArticlesData, GetArticlesResponses, GetPublicArticlesData, GetPublicArticlesResponses, SignInData, SignInResponses, SignUpData, SignUpResponses, UpdateArticleData, UpdateArticleResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean> = Options2<TData, ThrowOnError> & {
     /**
@@ -52,6 +52,12 @@ export const signUp = <ThrowOnError extends boolean = false>(options: Options<Si
         'Content-Type': 'application/json',
         ...options.headers
     }
+});
+
+export const createSignupLink = <ThrowOnError extends boolean = false>(options?: Options<CreateSignupLinkData, ThrowOnError>) => (options?.client ?? client).post<CreateSignupLinkResponses, unknown, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/api/v1/accounts/sign-up/link',
+    ...options
 });
 
 export const signIn = <ThrowOnError extends boolean = false>(options: Options<SignInData, ThrowOnError>) => (options.client ?? client).post<SignInResponses, unknown, ThrowOnError>({
