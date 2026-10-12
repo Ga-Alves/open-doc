@@ -14,17 +14,12 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 class SocialQueryApiImpl implements SocialQueryApi {
 
-  private final SocialConnectionRepository socialConnetionRepository;
+  private final SocialConnectionRepository socialConnectionRepository;
 
   public List<UUID> findFolloweeIds(UUID followerId) {
 
-    List<SocialConnectionsEntity> connections = this.socialConnetionRepository.findAllByFollowerId(followerId);
+    List<SocialConnectionsEntity> connections = this.socialConnectionRepository.findAllByFollowerId(followerId);
 
     return connections.stream().map((connection) -> connection.getFolloweeId()).toList();
-  }
-
-  public boolean follows(UUID followerId, UUID followeeId) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'follows'");
   }
 }

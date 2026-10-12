@@ -3,8 +3,8 @@
 import { type DefaultError, queryOptions, type UseMutationOptions } from '@tanstack/react-query';
 
 import { client } from '../client.gen';
-import { createArticle, createSignupLink, followUser, getArticles, getPublicArticles, listAccounts, listFeedArticles, myAccount, type Options, signIn, signUp, unfollowUser, updateArticle } from '../sdk.gen';
-import type { CreateArticleData, CreateArticleResponse, CreateSignupLinkData, CreateSignupLinkResponse, FollowUserData, GetArticlesData, GetArticlesResponse, GetPublicArticlesData, GetPublicArticlesResponse, ListAccountsData, ListAccountsResponse, ListFeedArticlesData, ListFeedArticlesResponse, MyAccountData, MyAccountResponse, SignInData, SignInResponse, SignUpData, SignUpResponse, UnfollowUserData, UpdateArticleData, UpdateArticleResponse } from '../types.gen';
+import { createArticle, createSignupLink, followUser, getArticles, getHomePageArticles, getPublicArticles, listAccounts, listFeedArticles, myAccount, type Options, signIn, signUp, unfollowUser, updateArticle } from '../sdk.gen';
+import type { CreateArticleData, CreateArticleResponse, CreateSignupLinkData, CreateSignupLinkResponse, FollowUserData, GetArticlesData, GetArticlesResponse, GetHomePageArticlesData, GetHomePageArticlesResponse, GetPublicArticlesData, GetPublicArticlesResponse, ListAccountsData, ListAccountsResponse, ListFeedArticlesData, ListFeedArticlesResponse, MyAccountData, MyAccountResponse, SignInData, SignInResponse, SignUpData, SignUpResponse, UnfollowUserData, UpdateArticleData, UpdateArticleResponse } from '../types.gen';
 
 export const updateArticleMutation = (options?: Partial<Options<UpdateArticleData>>): UseMutationOptions<UpdateArticleResponse, DefaultError, Options<UpdateArticleData>> => {
     const mutationOptions: UseMutationOptions<UpdateArticleResponse, DefaultError, Options<UpdateArticleData>> = {
@@ -165,6 +165,21 @@ export const getPublicArticlesOptions = (options?: Options<GetPublicArticlesData
         return data;
     },
     queryKey: getPublicArticlesQueryKey(options)
+});
+
+export const getHomePageArticlesQueryKey = (options?: Options<GetHomePageArticlesData>) => createQueryKey('getHomePageArticles', options);
+
+export const getHomePageArticlesOptions = (options?: Options<GetHomePageArticlesData>) => queryOptions<GetHomePageArticlesResponse, DefaultError, GetHomePageArticlesResponse, ReturnType<typeof getHomePageArticlesQueryKey>>({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await getHomePageArticles({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: getHomePageArticlesQueryKey(options)
 });
 
 export const listFeedArticlesQueryKey = (options?: Options<ListFeedArticlesData>) => createQueryKey('listFeedArticles', options);

@@ -5,6 +5,4 @@ import java.util.UUID;
 
 public interface SocialQueryApi {
   List<UUID> findFolloweeIds(UUID followerId);
-
-  boolean follows(UUID followerId, UUID followeeId);
 }

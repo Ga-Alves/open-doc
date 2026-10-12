@@ -201,6 +201,22 @@ export type GetPublicArticlesResponses = {
 
 export type GetPublicArticlesResponse = GetPublicArticlesResponses[keyof GetPublicArticlesResponses];
 
+export type GetHomePageArticlesData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/v1/articles/home';
+};
+
+export type GetHomePageArticlesResponses = {
+    /**
+     * OK
+     */
+    200: Array<ArticleResponseDto>;
+};
+
+export type GetHomePageArticlesResponse = GetHomePageArticlesResponses[keyof GetHomePageArticlesResponses];
+
 export type ListFeedArticlesData = {
     body?: never;
     path?: never;

@@ -48,13 +48,13 @@ public class SecurityConfig {
         .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authorizeHttpRequests(authorize -> authorize
             .requestMatchers(HttpMethod.POST, "/api/v1/accounts/sign-in").permitAll()
-            .requestMatchers(HttpMethod.POST, "/api/v1/accounts/sign-up").permitAll()
-            .requestMatchers(HttpMethod.GET, "/api/v1/articles/public").permitAll()
-            .requestMatchers(SWAGGER_PATHS).permitAll()
+            .requestMatchers(HttpMethod.POST, "/api/v1/accounts/sign-up/:id").permitAll()
             .requestMatchers(HttpMethod.POST, "/api/v1/accounts/sign-up/link").hasRole("ADMIN")
-            .requestMatchers(HttpMethod.GET, "/api/v1/accounts").not().anonymous()
-            .requestMatchers(HttpMethod.GET, "/api/v1/social/*").not().anonymous()
             .requestMatchers(HttpMethod.GET, "/api/v1/accounts/me").permitAll()
+            .requestMatchers(HttpMethod.GET, "/api/v1/accounts/*").not().anonymous()
+            .requestMatchers(HttpMethod.GET, "/api/v1/articles/*").permitAll()
+            .requestMatchers(HttpMethod.GET, "/api/v1/social/*").not().anonymous()
+            .requestMatchers(SWAGGER_PATHS).permitAll()
             .anyRequest().authenticated())
         .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
         .build();

@@ -37,6 +37,11 @@ public class ArticleController {
         return articleService.getPublicArticles();
     }
 
+    @GetMapping("/home")
+    public List<ArticleResponseDTO> getHomePageArticles() {
+        return articleService.getHomePageArticles();
+    }
+
     @GetMapping("/feed")
     public List<ArticleResponseDTO> listFeedArticles(@AuthenticationPrincipal String userId) {
         return articleService.getFolloweeArticles(UUID.fromString(userId));

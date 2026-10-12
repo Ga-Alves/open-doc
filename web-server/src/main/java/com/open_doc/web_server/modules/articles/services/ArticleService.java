@@ -2,11 +2,13 @@ package com.open_doc.web_server.modules.articles.services;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.open_doc.web_server.modules.accounts.api.AccountsQueryApi;
 import com.open_doc.web_server.modules.articles.domain.ArticleEntity;
 import com.open_doc.web_server.modules.articles.repositories.ArticleRepository;
 import com.open_doc.web_server.modules.articles.services.dtos.ArticleResponseDTO;
@@ -22,6 +24,7 @@ public class ArticleService {
 
         private final ArticleRepository articleRepository;
         private final SocialQueryApi socialQueryApi;
+        private final AccountsQueryApi accountsQueryApi;
 
         public List<ArticleResponseDTO> getArticles(UUID userId) {
                 return articleRepository.findByAuthorId(userId).stream()
@@ -43,6 +46,22 @@ public class ArticleService {
                                                 article.getIsPublic(),
                                                 article.getCreatedAt().toString()))
                                 .toList();
+        }
+
+        public List<ArticleResponseDTO> getHomePageArticles() {
+                var admins = accountsQueryApi.getAdminsIds().stream().collect(Collectors.toSet());
+
+                var adminArticles = articleRepository.findByIsPublic(true).stream()
+                                .filter(article -> admins.contains(article.getAuthorId()))
+                                .map(article -> new ArticleResponseDTO(
+                                                article.getId(),
+                                                article.getTitle(),
+                                                article.getContent(),
+                                                article.getIsPublic(),
+                                                article.getCreatedAt().toString()))
+                                .toList();
+
+                return adminArticles;
         }
 
         public ArticleResponseDTO createArticle(CreateArticleRequestDTO payload, UUID userId) {
