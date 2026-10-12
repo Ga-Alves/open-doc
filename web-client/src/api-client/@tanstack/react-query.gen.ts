@@ -3,13 +3,27 @@
 import { type DefaultError, queryOptions, type UseMutationOptions } from '@tanstack/react-query';
 
 import { client } from '../client.gen';
-import { createArticle, createSignupLink, followUser, getArticles, getPublicArticles, listAccounts, listFeedArticles, myAccount, type Options, signIn, signUp, updateArticle } from '../sdk.gen';
-import type { CreateArticleData, CreateArticleResponse, CreateSignupLinkData, CreateSignupLinkResponse, FollowUserData, GetArticlesData, GetArticlesResponse, GetPublicArticlesData, GetPublicArticlesResponse, ListAccountsData, ListAccountsResponse, ListFeedArticlesData, ListFeedArticlesResponse, MyAccountData, MyAccountResponse, SignInData, SignInResponse, SignUpData, SignUpResponse, UpdateArticleData, UpdateArticleResponse } from '../types.gen';
+import { createArticle, createSignupLink, followUser, getArticles, getPublicArticles, listAccounts, listFeedArticles, myAccount, type Options, signIn, signUp, unfollowUser, updateArticle } from '../sdk.gen';
+import type { CreateArticleData, CreateArticleResponse, CreateSignupLinkData, CreateSignupLinkResponse, FollowUserData, GetArticlesData, GetArticlesResponse, GetPublicArticlesData, GetPublicArticlesResponse, ListAccountsData, ListAccountsResponse, ListFeedArticlesData, ListFeedArticlesResponse, MyAccountData, MyAccountResponse, SignInData, SignInResponse, SignUpData, SignUpResponse, UnfollowUserData, UpdateArticleData, UpdateArticleResponse } from '../types.gen';
 
 export const updateArticleMutation = (options?: Partial<Options<UpdateArticleData>>): UseMutationOptions<UpdateArticleResponse, DefaultError, Options<UpdateArticleData>> => {
     const mutationOptions: UseMutationOptions<UpdateArticleResponse, DefaultError, Options<UpdateArticleData>> = {
         mutationFn: async (fnOptions) => {
             const { data } = await updateArticle({
+                ...options,
+                ...fnOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
+
+export const unfollowUserMutation = (options?: Partial<Options<UnfollowUserData>>): UseMutationOptions<unknown, DefaultError, Options<UnfollowUserData>> => {
+    const mutationOptions: UseMutationOptions<unknown, DefaultError, Options<UnfollowUserData>> = {
+        mutationFn: async (fnOptions) => {
+            const { data } = await unfollowUser({
                 ...options,
                 ...fnOptions,
                 throwOnError: true

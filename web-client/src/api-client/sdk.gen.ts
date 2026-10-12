@@ -2,7 +2,7 @@
 
 import type { Client, Options as Options2, TDataShape } from './client';
 import { client } from './client.gen';
-import type { CreateArticleData, CreateArticleResponses, CreateSignupLinkData, CreateSignupLinkResponses, FollowUserData, FollowUserResponses, GetArticlesData, GetArticlesResponses, GetPublicArticlesData, GetPublicArticlesResponses, ListAccountsData, ListAccountsResponses, ListFeedArticlesData, ListFeedArticlesResponses, MyAccountData, MyAccountResponses, SignInData, SignInResponses, SignUpData, SignUpResponses, UpdateArticleData, UpdateArticleResponses } from './types.gen';
+import type { CreateArticleData, CreateArticleResponses, CreateSignupLinkData, CreateSignupLinkResponses, FollowUserData, FollowUserResponses, GetArticlesData, GetArticlesResponses, GetPublicArticlesData, GetPublicArticlesResponses, ListAccountsData, ListAccountsResponses, ListFeedArticlesData, ListFeedArticlesResponses, MyAccountData, MyAccountResponses, SignInData, SignInResponses, SignUpData, SignUpResponses, UnfollowUserData, UnfollowUserResponses, UpdateArticleData, UpdateArticleResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean> = Options2<TData, ThrowOnError> & {
     /**
@@ -26,6 +26,12 @@ export const updateArticle = <ThrowOnError extends boolean = false>(options: Opt
         'Content-Type': 'application/json',
         ...options.headers
     }
+});
+
+export const unfollowUser = <ThrowOnError extends boolean = false>(options: Options<UnfollowUserData, ThrowOnError>) => (options.client ?? client).delete<UnfollowUserResponses, unknown, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/api/v1/social/follow/:id',
+    ...options
 });
 
 export const followUser = <ThrowOnError extends boolean = false>(options: Options<FollowUserData, ThrowOnError>) => (options.client ?? client).post<FollowUserResponses, unknown, ThrowOnError>({

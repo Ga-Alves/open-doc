@@ -4,6 +4,7 @@ import {
   listAccountsOptions,
   listFeedArticlesOptions,
   followUserMutation,
+  unfollowUserMutation,
   listAccountsQueryKey,
   listFeedArticlesQueryKey,
 } from "@/api-client/@tanstack/react-query.gen";
@@ -13,31 +14,60 @@ import Layout from "@/shared/layout/layout";
 
 export default function SocialPage() {
   const [activeTab, setActiveTab] = useState<"discover" | "feed">("discover");
+  const [pendingAccountId, setPendingAccountId] = useState<string | null>(null);
   const queryClient = useQueryClient();
 
   const { data: accounts, isLoading: isLoadingAccounts } = useQuery(
     listAccountsOptions()
   );
+
   const { data: feedArticles, isLoading: isLoadingFeed } = useQuery(
     listFeedArticlesOptions()
   );
-  const { mutate: followUser, isPending: isFollowing } = useMutation({
+
+  // Invalidação das queries reutilizável para ambas as mutações
+  const invalidateQueries = () => {
+    queryClient.invalidateQueries({ queryKey: listAccountsQueryKey() });
+    queryClient.invalidateQueries({ queryKey: listFeedArticlesQueryKey() });
+    setPendingAccountId(null);
+  };
+
+  // Mutação para seguir
+  const { mutate: followUser } = useMutation({
     ...followUserMutation(),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: listAccountsQueryKey() });
-      queryClient.invalidateQueries({ queryKey: listFeedArticlesQueryKey() });
-    },
+    onSuccess: invalidateQueries,
     onError: (error) => {
       console.error("Failed to follow user:", error);
+      setPendingAccountId(null);
     },
   });
 
-  const handleFollowToggle = (accountId: string) => {
-    followUser({
-      query: {
-        accountToFollow: accountId,
-      },
-    });
+  // Mutação para deixar de seguir (Unfollow)
+  const { mutate: unfollowUser } = useMutation({
+    ...unfollowUserMutation(),
+    onSuccess: invalidateQueries,
+    onError: (error) => {
+      console.error("Failed to unfollow user:", error);
+      setPendingAccountId(null);
+    },
+  });
+
+  const handleFollowToggle = (account: { id: string; followedByUser?: boolean }) => {
+    setPendingAccountId(account.id);
+
+    if (account.followedByUser) {
+      unfollowUser({
+        query: {
+          accountToFollow: account.id,
+        },
+      });
+    } else {
+      followUser({
+        query: {
+          accountToFollow: account.id,
+        },
+      });
+    }
   };
 
   return (
@@ -95,40 +125,48 @@ export default function SocialPage() {
               </div>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {accounts.map((account) => (
-                  <div
-                    key={account.id}
-                    className="p-5 bg-white rounded-2xl border border-gray-100 shadow-sm flex items-center justify-between gap-4"
-                  >
-                    <div className="space-y-1 truncate">
-                      <div className="flex items-center gap-2">
-                        <span className="font-semibold text-gray-900 truncate">
-                          {account.name}
-                        </span>
-                        <span
-                          className={`px-2 py-0.5 rounded-full text-[10px] font-medium tracking-wide uppercase ${
-                            account.role === "ADMIN"
-                              ? "bg-purple-50 text-purple-700 border border-purple-200/60"
-                              : "bg-gray-100 text-gray-600"
-                          }`}
-                        >
-                          {account.role}
-                        </span>
-                      </div>
-                      <p className="text-xs text-gray-500 truncate">{account.email}</p>
-                    </div>
+                {accounts.map((account) => {
+                  const isActionPending = pendingAccountId === account.id;
 
-                    <Button
-                      variant={account.followedByUser ? "outline" : "primary"}
-                      size="sm"
-                      disabled={isFollowing}
-                      onClick={() => handleFollowToggle(account.id)}
-                      className="shrink-0"
+                  return (
+                    <div
+                      key={account.id}
+                      className="p-5 bg-white rounded-2xl border border-gray-100 shadow-sm flex items-center justify-between gap-4"
                     >
-                      {account.followedByUser ? "Following" : "+ Follow"}
-                    </Button>
-                  </div>
-                ))}
+                      <div className="space-y-1 truncate">
+                        <div className="flex items-center gap-2">
+                          <span className="font-semibold text-gray-900 truncate">
+                            {account.name}
+                          </span>
+                          <span
+                            className={`px-2 py-0.5 rounded-full text-[10px] font-medium tracking-wide uppercase ${
+                              account.role === "ADMIN"
+                                ? "bg-purple-50 text-purple-700 border border-purple-200/60"
+                                : "bg-gray-100 text-gray-600"
+                            }`}
+                          >
+                            {account.role}
+                          </span>
+                        </div>
+                        <p className="text-xs text-gray-500 truncate">{account.email}</p>
+                      </div>
+
+                      <Button
+                        variant={account.followedByUser ? "outline" : "primary"}
+                        size="sm"
+                        disabled={isActionPending}
+                        onClick={() => handleFollowToggle(account)}
+                        className="shrink-0 transition-all min-w-[90px]"
+                      >
+                        {isActionPending
+                          ? "Saving..."
+                          : account.followedByUser
+                          ? "Unfollow"
+                          : "+ Follow"}
+                      </Button>
+                    </div>
+                  );
+                })}
               </div>
             )}
           </div>

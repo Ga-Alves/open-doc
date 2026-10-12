@@ -3,6 +3,7 @@ package com.open_doc.web_server.modules.social.controllers;
 import java.util.UUID;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -22,6 +23,12 @@ public class SocialController {
   @PostMapping("/follow/:id")
   public void followUser(@AuthenticationPrincipal String userId, @RequestParam UUID accountToFollow) {
     socialService.follow(UUID.fromString(userId), accountToFollow);
+  }
+
+
+  @DeleteMapping ("/follow/:id")
+    public void unfollowUser(@AuthenticationPrincipal String userId, @RequestParam UUID accountToFollow) {
+    socialService.unfollow(UUID.fromString(userId), accountToFollow);
   }
 
 }

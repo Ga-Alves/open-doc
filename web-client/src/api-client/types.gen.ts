@@ -73,6 +73,22 @@ export type UpdateArticleResponses = {
 
 export type UpdateArticleResponse = UpdateArticleResponses[keyof UpdateArticleResponses];
 
+export type UnfollowUserData = {
+    body?: never;
+    path?: never;
+    query: {
+        accountToFollow: string;
+    };
+    url: '/api/v1/social/follow/:id';
+};
+
+export type UnfollowUserResponses = {
+    /**
+     * OK
+     */
+    200: unknown;
+};
+
 export type FollowUserData = {
     body?: never;
     path?: never;

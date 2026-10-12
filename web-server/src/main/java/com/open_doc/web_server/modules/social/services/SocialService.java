@@ -33,4 +33,14 @@ public class SocialService {
     socialConnetionRepository.save(connection);
   }
 
+    public void unfollow(UUID followerId, UUID followee) {
+
+    SocialConnectionsEntity connection = SocialConnectionsEntity.builder()
+        .followerId(followerId)
+        .followeeId(followee)
+        .build();
+
+    socialConnetionRepository.delete(connection);
+  }
+
 }
