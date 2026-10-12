@@ -1,4 +1,4 @@
-package com.open_doc.web_server.modules.social_connections.entities;
+package com.open_doc.web_server.modules.social.entities;
 
 import java.io.Serializable;
 import java.util.UUID;

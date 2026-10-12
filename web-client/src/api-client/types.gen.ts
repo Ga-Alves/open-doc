@@ -41,6 +41,14 @@ export type SignInRequestDto = {
 };
 
 export type AccountResponseDto = {
+    name: string;
+    email: string;
+    id: string;
+    role: 'ADMIN' | 'USER';
+    followedByUser: boolean;
+};
+
+export type MyAccountResponseDto = {
     name?: string;
     email?: string;
     id?: string;
@@ -64,6 +72,38 @@ export type UpdateArticleResponses = {
 };
 
 export type UpdateArticleResponse = UpdateArticleResponses[keyof UpdateArticleResponses];
+
+export type UnfollowUserData = {
+    body?: never;
+    path?: never;
+    query: {
+        accountToFollow: string;
+    };
+    url: '/api/v1/social/follow/:id';
+};
+
+export type UnfollowUserResponses = {
+    /**
+     * OK
+     */
+    200: unknown;
+};
+
+export type FollowUserData = {
+    body?: never;
+    path?: never;
+    query: {
+        accountToFollow: string;
+    };
+    url: '/api/v1/social/follow/:id';
+};
+
+export type FollowUserResponses = {
+    /**
+     * OK
+     */
+    200: unknown;
+};
 
 export type GetArticlesData = {
     body?: never;
@@ -161,6 +201,38 @@ export type GetPublicArticlesResponses = {
 
 export type GetPublicArticlesResponse = GetPublicArticlesResponses[keyof GetPublicArticlesResponses];
 
+export type GetHomePageArticlesData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/v1/articles/home';
+};
+
+export type GetHomePageArticlesResponses = {
+    /**
+     * OK
+     */
+    200: Array<ArticleResponseDto>;
+};
+
+export type GetHomePageArticlesResponse = GetHomePageArticlesResponses[keyof GetHomePageArticlesResponses];
+
+export type ListFeedArticlesData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/v1/articles/feed';
+};
+
+export type ListFeedArticlesResponses = {
+    /**
+     * OK
+     */
+    200: Array<ArticleResponseDto>;
+};
+
+export type ListFeedArticlesResponse = ListFeedArticlesResponses[keyof ListFeedArticlesResponses];
+
 export type ListAccountsData = {
     body?: never;
     path?: never;
@@ -188,7 +260,7 @@ export type MyAccountResponses = {
     /**
      * OK
      */
-    200: AccountResponseDto;
+    200: MyAccountResponseDto;
 };
 
 export type MyAccountResponse = MyAccountResponses[keyof MyAccountResponses];

@@ -10,6 +10,7 @@ import "@ga-alves/oxygen-ui/style.css";
 import AdminDashboard from "./pages/private/admin/admin-dashboard-page";
 import SignUpPage from "./pages/private/sign-up/sign-up";
 import CollaborativeArticle from "./pages/public/collaborative-article/collaborative-article";
+import SocialPage from "./pages/private/social/social-page";
 
 function App() {
   return (
@@ -30,6 +31,10 @@ function App() {
       <Route
         path={OPEN_DOCS_PRIVATE_ROUTE.ADMIN_DASHBOARD}
         element={<AdminDashboard />}
+      />{" "}
+      <Route
+        path={OPEN_DOCS_PRIVATE_ROUTE.SOCIAL}
+        element={<SocialPage />}
       />
     </Routes>
   );

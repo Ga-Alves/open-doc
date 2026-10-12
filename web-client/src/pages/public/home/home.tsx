@@ -1,14 +1,14 @@
-import { useNavigate } from "react-router";
-import { useQuery } from "@tanstack/react-query";
-import { getPublicArticlesOptions } from "@/api-client/@tanstack/react-query.gen";
+import { getHomePageArticlesOptions } from "@/api-client/@tanstack/react-query.gen";
 import ArticleCard from "@/shared/components/article-card/article-card";
 import Button from "@/shared/components/button/button";
 import Layout from "@/shared/layout/layout";
 import { OPEN_DOCS_ROUTE } from "@/utils/constants";
+import { useQuery } from "@tanstack/react-query";
+import { useNavigate } from "react-router";
 
 export default function Home() {
   const navigate = useNavigate();
-  const { data: articles, isLoading } = useQuery(getPublicArticlesOptions());
+  const { data: articles, isLoading } = useQuery(getHomePageArticlesOptions());
 
   const handleStartCollaborativeSession = () => {
     const roomId = crypto.randomUUID ? crypto.randomUUID() : Date.now().toString();

@@ -2,6 +2,7 @@ import { useAuth } from "@/shared/context/use-auth";
 import { OPEN_DOCS_PRIVATE_ROUTE, OPEN_DOCS_ROUTE } from "@/utils/constants";
 import { useNavigate } from "react-router";
 import Button from "../components/button/button";
+import logo from "@/assets/duck.svg";
 
 export default function Header() {
   const navigate = useNavigate();
@@ -13,18 +14,29 @@ export default function Header() {
         href="/"
         className="text-lg font-bold tracking-tight text-gray-900 flex items-center gap-2"
       >
-        <span className="w-2.5 h-2.5 rounded-full bg-gray-900"></span>
+        <img src={logo} alt="Open Doc logo" className="h-9 w-9" />
         Open Doc
       </a>
 
       <div className="flex items-center gap-3">
         {!isLoading && (
           <>
+            {isAuthenticated && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => navigate("/social")}
+              >
+                👥 Network
+              </Button>
+            )}
             {isAdmin && (
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => navigate(OPEN_DOCS_PRIVATE_ROUTE.ADMIN_DASHBOARD)}
+                onClick={() =>
+                  navigate(OPEN_DOCS_PRIVATE_ROUTE.ADMIN_DASHBOARD)
+                }
               >
                 ⚙️ Admin Dashboard
               </Button>
