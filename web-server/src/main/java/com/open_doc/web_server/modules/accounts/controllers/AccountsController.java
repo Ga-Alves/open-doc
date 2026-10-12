@@ -15,6 +15,7 @@ import com.open_doc.web_server.modules.accounts.domain.SignupLinksEntity;
 import com.open_doc.web_server.modules.accounts.services.AccountService;
 import com.open_doc.web_server.modules.accounts.services.SignupLinksService;
 import com.open_doc.web_server.modules.accounts.services.dtos.AccountResponseDTO;
+import com.open_doc.web_server.modules.accounts.services.dtos.MyAccountResponseDTO;
 import com.open_doc.web_server.modules.accounts.services.dtos.SignInRequestDTO;
 import com.open_doc.web_server.modules.accounts.services.dtos.SignUpLinkResponseDTO;
 import com.open_doc.web_server.modules.accounts.services.dtos.SignUpRequestDTO;
@@ -60,12 +61,12 @@ public class AccountsController {
     }
 
     @GetMapping("/me")
-    public AccountResponseDTO myAccount(@AuthenticationPrincipal String userId) {
+    public MyAccountResponseDTO myAccount(@AuthenticationPrincipal String userId) {
         return accountService.myAccount(UUID.fromString(userId));
     }
 
     @GetMapping()
-    public List<AccountResponseDTO> listAccounts() {
-        return accountService.listAccounts();
+    public List<AccountResponseDTO> listAccounts(@AuthenticationPrincipal String userId) {
+        return accountService.listAccounts(UUID.fromString(userId));
     }
 }

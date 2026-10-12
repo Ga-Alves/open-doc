@@ -2,7 +2,7 @@
 
 import type { Client, Options as Options2, TDataShape } from './client';
 import { client } from './client.gen';
-import type { CreateArticleData, CreateArticleResponses, CreateSignupLinkData, CreateSignupLinkResponses, GetArticlesData, GetArticlesResponses, GetPublicArticlesData, GetPublicArticlesResponses, ListAccountsData, ListAccountsResponses, MyAccountData, MyAccountResponses, SignInData, SignInResponses, SignUpData, SignUpResponses, UpdateArticleData, UpdateArticleResponses } from './types.gen';
+import type { CreateArticleData, CreateArticleResponses, CreateSignupLinkData, CreateSignupLinkResponses, FollowUserData, FollowUserResponses, GetArticlesData, GetArticlesResponses, GetPublicArticlesData, GetPublicArticlesResponses, ListAccountsData, ListAccountsResponses, ListFeedArticlesData, ListFeedArticlesResponses, MyAccountData, MyAccountResponses, SignInData, SignInResponses, SignUpData, SignUpResponses, UpdateArticleData, UpdateArticleResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean> = Options2<TData, ThrowOnError> & {
     /**
@@ -26,6 +26,12 @@ export const updateArticle = <ThrowOnError extends boolean = false>(options: Opt
         'Content-Type': 'application/json',
         ...options.headers
     }
+});
+
+export const followUser = <ThrowOnError extends boolean = false>(options: Options<FollowUserData, ThrowOnError>) => (options.client ?? client).post<FollowUserResponses, unknown, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/api/v1/social/follow/:id',
+    ...options
 });
 
 export const getArticles = <ThrowOnError extends boolean = false>(options?: Options<GetArticlesData, ThrowOnError>) => (options?.client ?? client).get<GetArticlesResponses, unknown, ThrowOnError>({
@@ -73,6 +79,12 @@ export const signIn = <ThrowOnError extends boolean = false>(options: Options<Si
 export const getPublicArticles = <ThrowOnError extends boolean = false>(options?: Options<GetPublicArticlesData, ThrowOnError>) => (options?.client ?? client).get<GetPublicArticlesResponses, unknown, ThrowOnError>({
     security: [{ scheme: 'bearer', type: 'http' }],
     url: '/api/v1/articles/public',
+    ...options
+});
+
+export const listFeedArticles = <ThrowOnError extends boolean = false>(options?: Options<ListFeedArticlesData, ThrowOnError>) => (options?.client ?? client).get<ListFeedArticlesResponses, unknown, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/api/v1/articles/feed',
     ...options
 });
 

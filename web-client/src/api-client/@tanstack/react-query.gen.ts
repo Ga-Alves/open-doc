@@ -3,13 +3,27 @@
 import { type DefaultError, queryOptions, type UseMutationOptions } from '@tanstack/react-query';
 
 import { client } from '../client.gen';
-import { createArticle, createSignupLink, getArticles, getPublicArticles, listAccounts, myAccount, type Options, signIn, signUp, updateArticle } from '../sdk.gen';
-import type { CreateArticleData, CreateArticleResponse, CreateSignupLinkData, CreateSignupLinkResponse, GetArticlesData, GetArticlesResponse, GetPublicArticlesData, GetPublicArticlesResponse, ListAccountsData, ListAccountsResponse, MyAccountData, MyAccountResponse, SignInData, SignInResponse, SignUpData, SignUpResponse, UpdateArticleData, UpdateArticleResponse } from '../types.gen';
+import { createArticle, createSignupLink, followUser, getArticles, getPublicArticles, listAccounts, listFeedArticles, myAccount, type Options, signIn, signUp, updateArticle } from '../sdk.gen';
+import type { CreateArticleData, CreateArticleResponse, CreateSignupLinkData, CreateSignupLinkResponse, FollowUserData, GetArticlesData, GetArticlesResponse, GetPublicArticlesData, GetPublicArticlesResponse, ListAccountsData, ListAccountsResponse, ListFeedArticlesData, ListFeedArticlesResponse, MyAccountData, MyAccountResponse, SignInData, SignInResponse, SignUpData, SignUpResponse, UpdateArticleData, UpdateArticleResponse } from '../types.gen';
 
 export const updateArticleMutation = (options?: Partial<Options<UpdateArticleData>>): UseMutationOptions<UpdateArticleResponse, DefaultError, Options<UpdateArticleData>> => {
     const mutationOptions: UseMutationOptions<UpdateArticleResponse, DefaultError, Options<UpdateArticleData>> = {
         mutationFn: async (fnOptions) => {
             const { data } = await updateArticle({
+                ...options,
+                ...fnOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
+
+export const followUserMutation = (options?: Partial<Options<FollowUserData>>): UseMutationOptions<unknown, DefaultError, Options<FollowUserData>> => {
+    const mutationOptions: UseMutationOptions<unknown, DefaultError, Options<FollowUserData>> = {
+        mutationFn: async (fnOptions) => {
+            const { data } = await followUser({
                 ...options,
                 ...fnOptions,
                 throwOnError: true
@@ -137,6 +151,21 @@ export const getPublicArticlesOptions = (options?: Options<GetPublicArticlesData
         return data;
     },
     queryKey: getPublicArticlesQueryKey(options)
+});
+
+export const listFeedArticlesQueryKey = (options?: Options<ListFeedArticlesData>) => createQueryKey('listFeedArticles', options);
+
+export const listFeedArticlesOptions = (options?: Options<ListFeedArticlesData>) => queryOptions<ListFeedArticlesResponse, DefaultError, ListFeedArticlesResponse, ReturnType<typeof listFeedArticlesQueryKey>>({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await listFeedArticles({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: listFeedArticlesQueryKey(options)
 });
 
 export const listAccountsQueryKey = (options?: Options<ListAccountsData>) => createQueryKey('listAccounts', options);

@@ -20,11 +20,22 @@ export default function Header() {
       <div className="flex items-center gap-3">
         {!isLoading && (
           <>
+            {isAuthenticated && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => navigate("/social")}
+              >
+                👥 Network
+              </Button>
+            )}
             {isAdmin && (
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => navigate(OPEN_DOCS_PRIVATE_ROUTE.ADMIN_DASHBOARD)}
+                onClick={() =>
+                  navigate(OPEN_DOCS_PRIVATE_ROUTE.ADMIN_DASHBOARD)
+                }
               >
                 ⚙️ Admin Dashboard
               </Button>
