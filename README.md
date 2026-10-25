@@ -39,14 +39,14 @@ open-doc is an open source writing platform for publishing articles, collaborati
 ├── web-client/         # React + TypeScript + Vite frontend
 ├── web-server/         # Spring Boot API, auth, persistence, Swagger
 ├── webrtc-signaling/   # Yjs/WebRTC signaling server
-└── infra/              # Docker Compose and TLS/certbot setup
+└── infra/              # Docker Compose, Traefik, and automatic TLS
 ```
 
 ## Tech stack
 
 - Frontend: React 19, TypeScript, Vite, TanStack Query, ProseMirror, Yjs
 - Backend: Spring Boot 4, Spring Security, JPA, Flyway, PostgreSQL
-- Infra: Docker Compose, Nginx, Certbot
+- Infra: Docker Compose, Traefik, Node static server, Let's Encrypt
 
 ## Local development
 
@@ -108,7 +108,7 @@ The `infra/` folder contains the Docker Compose setup for running the full stack
 cd infra
 cp .env.production.example .env.production
 source .env.production
-docker compose up -d
+docker compose up -d --build
 ```
 
 After the stack is up, you can seed the first admin user directly in PostgreSQL as described in `infra/README.md`.

@@ -13,9 +13,15 @@ COPY . .
 RUN npm ci
 RUN npm run build
 
-FROM nginx:alpine
+FROM node:24-alpine AS runtime
 
-COPY --from=builder /app/dist /usr/share/nginx/html
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+WORKDIR /app
 
-EXPOSE 80
+RUN npm install --global serve@14.2.4
+COPY --from=builder --chown=node:node /app/dist ./dist
+
+USER node
+
+EXPOSE 8080
+
+CMD ["serve", "-s", "dist", "-l", "8080"]
