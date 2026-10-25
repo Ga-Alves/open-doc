@@ -24,6 +24,13 @@ services:
     restart: unless-stopped
     networks:
       - open-doc-network
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.web-server.rule=Host(`${APP_DOMAIN}`) && PathPrefix(`/api`)
+      - traefik.http.routers.web-server.entrypoints=websecure
+      - traefik.http.routers.web-server.tls.certresolver=letsencrypt
+      - traefik.http.routers.web-server.priority=20
+      - traefik.http.services.web-server.loadbalancer.server.port=${API_PORT}
     depends_on:
       - postgres
 
@@ -33,6 +40,13 @@ services:
       - SIGNALING_PORT=${SIGNALING_PORT}
     networks:
       - open-doc-network
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.webrtc-signaling.rule=Host(`${APP_DOMAIN}`) && PathPrefix(`/signaling`)
+      - traefik.http.routers.webrtc-signaling.entrypoints=websecure
+      - traefik.http.routers.webrtc-signaling.tls.certresolver=letsencrypt
+      - traefik.http.routers.webrtc-signaling.priority=20
+      - traefik.http.services.webrtc-signaling.loadbalancer.server.port=${SIGNALING_PORT}
 
   web-client:
     build:
@@ -40,6 +54,30 @@ services:
       args:
         VITE_API_BASE_URL: ${VITE_API_BASE_URL}
         VITE_SIGNALING_SERVER_HOST: ${VITE_SIGNALING_SERVER_HOST}
+    restart: unless-stopped
+    networks:
+      - open-doc-network
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.web-client.rule=Host(`${APP_DOMAIN}`)
+      - traefik.http.routers.web-client.entrypoints=websecure
+      - traefik.http.routers.web-client.tls.certresolver=letsencrypt
+      - traefik.http.routers.web-client.priority=1
+      - traefik.http.services.web-client.loadbalancer.server.port=8080
+
+  traefik:
+    image: traefik:v3
+    command:
+      - --providers.docker=true
+      - --providers.docker.exposedbydefault=false
+      - --entrypoints.web.address=:80
+      - --entrypoints.web.http.redirections.entrypoint.to=websecure
+      - --entrypoints.web.http.redirections.entrypoint.scheme=https
+      - --entrypoints.websecure.address=:443
+      - --certificatesresolvers.letsencrypt.acme.email=${SSL_EMAIL}
+      - --certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json
+      - --certificatesresolvers.letsencrypt.acme.httpchallenge=true
+      - --certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=web
     ports:
       - "80:80"
       - "443:443"
@@ -47,35 +85,13 @@ services:
     networks:
       - open-doc-network
     volumes:
-      - ssl-cert:/etc/letsencrypt:ro
-      - webroot:/var/www/certbot:ro
-    depends_on:
-      - certbot
-
-  certbot:
-    build: ./ssl-certificate/
-    environment:
-      - APP_DOMAIN=${APP_DOMAIN}
-      - SSL_EMAIL=${SSL_EMAIL}
-    volumes:
-      - ssl-cert:/etc/letsencrypt
-      - webroot:/var/www/certbot
-    network_mode: host
-
-  certbot-renew:
-    build: ./ssl-certificate-renew/
-    restart: unless-stopped
-    volumes:
-      - ssl-cert:/etc/letsencrypt
-      - webroot:/var/www/certbot
-    depends_on:
-      - web-server
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - traefik_data:/letsencrypt
 
 
 volumes:
   postgres_data:
-  ssl-cert:
-  webroot:
+  traefik_data:
 
 networks:
   open-doc-network:

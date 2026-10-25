@@ -9,10 +9,12 @@ cp .env.production.example .env.production
 and complete the .env.production
 
 
-## Compose up in all services
+## Start the stack
+Point `APP_DOMAIN` to this server and make sure inbound TCP ports 80 and 443 are reachable. Traefik obtains and renews the Let's Encrypt certificate automatically using HTTP-01. Keep `APP_DOMAIN` before the frontend URL variables in `.env.production`, since the file is loaded with `source`.
+
 ```bash
 source .env.production
-docker compose up -d
+docker compose up -d --build
 ```
 
 ## Feed first admin
